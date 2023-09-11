@@ -65,3 +65,28 @@ func (a *App) DevicesMacs() []string {
 	}
 	return macAddrs
 }
+
+func (a *App) GetRate() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	getRate(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
+func (a *App) StartAcquisition() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	startAcquisition(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
+func (a *App) HVOn() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	hvOn(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
+func (a *App) HVOff() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	hvOff(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
+func (a *App) ReadData() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	readData(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}

@@ -17,7 +17,7 @@ func decodeFrame(recvChannel chan *Frame, data *DaqData) {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
 		default:
-			log.Fatalf("Unkown responde command")
+			log.Fatalf("Unkown response command")
 		}
 	}
 }

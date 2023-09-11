@@ -3,6 +3,16 @@
 
 export function DevicesMacs():Promise<Array<string>>;
 
+export function GetRate():Promise<void>;
+
 export function Greet(arg1:string):Promise<string>;
 
+export function HVOff():Promise<void>;
+
+export function HVOn():Promise<void>;
+
+export function ReadData():Promise<void>;
+
 export function ScanDevices():Promise<string>;
+
+export function StartAcquisition():Promise<void>;

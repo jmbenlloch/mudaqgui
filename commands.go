@@ -15,10 +15,10 @@ const (
 
 	// Board configuration and data acquisition
 	FEB_SET_RECV  Cmd = 0x0101
-	FEB_GEB_INIT      = 0x0102
-	FEB_GEB_HVON      = 0x0103
-	FEB_GEB_HVOFF     = 0x0104
-	FEB_GEB_RATE      = 0x0105
+	FEB_GEN_INIT      = 0x0102
+	FEB_GEN_HVON      = 0x0103
+	FEB_GEN_HVOFF     = 0x0104
+	FEB_GET_RATE      = 0x0105
 	FEB_OK            = 0x0100
 	FEB_ERR           = 0x01FF
 

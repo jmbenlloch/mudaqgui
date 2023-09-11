@@ -1,11 +1,41 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { Greet, ScanDevices, DevicesMacs } from "../../wailsjs/go/main/App";
+import { Greet, HVOn, HVOff, ReadData, GetRate, StartAcquisition, DevicesMacs } from "../../wailsjs/go/main/App";
 
 function doGreeting() {
   Greet("testfn").then((result) => {
     console.log(result)
+  });
+}
+
+function getRate() {
+  GetRate().then(() => {
+    console.log("get rate")
+  });
+}
+
+function readData() {
+  ReadData().then(() => {
+    console.log("read data")
+  });
+}
+
+function startRun() {
+  StartAcquisition().then(() => {
+    console.log("start run")
+  });
+}
+
+function hvOn() {
+  HVOn().then(() => {
+    console.log("hv on")
+  });
+}
+
+function hvOff() {
+  HVOff().then(() => {
+    console.log("hv off")
   });
 }
 
@@ -26,6 +56,11 @@ function scanDevices() {
 
     <button @click="doGreeting()" class="btn btn-primary">Scan network</button>
     <button @click="scanDevices()" class="btn btn-primary">Show results</button>
+    <button @click="getRate()" class="btn btn-primary">Get Rate</button>
+    <button @click="startRun()" class="btn btn-primary">Start run</button>
+    <button @click="hvOn()" class="btn btn-primary">HV on</button>
+    <button @click="hvOff()" class="btn btn-primary">HV off</button>
+    <button @click="readData()" class="btn btn-primary">Read data</button>
 
     <div>
       <h3>Devices found</h3>

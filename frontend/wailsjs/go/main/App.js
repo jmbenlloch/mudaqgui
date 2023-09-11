@@ -6,10 +6,30 @@ export function DevicesMacs() {
   return window['go']['main']['App']['DevicesMacs']();
 }
 
+export function GetRate() {
+  return window['go']['main']['App']['GetRate']();
+}
+
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
 }
 
+export function HVOff() {
+  return window['go']['main']['App']['HVOff']();
+}
+
+export function HVOn() {
+  return window['go']['main']['App']['HVOn']();
+}
+
+export function ReadData() {
+  return window['go']['main']['App']['ReadData']();
+}
+
 export function ScanDevices() {
   return window['go']['main']['App']['ScanDevices']();
+}
+
+export function StartAcquisition() {
+  return window['go']['main']['App']['StartAcquisition']();
 }
