@@ -15,7 +15,6 @@ import MenuBar from '../components/MenuBar.vue';
         <MenuBar />
       </div>
       <div class="flex gap-3">
-        <EnableAmplifier/>
         <EnableTrigger/>
         <ProbeRegister />
         <GainBias />

@@ -56,3 +56,12 @@ func (a *App) ScanDevices() string {
 	fmt.Println(macAddrs)
 	return macAddrs
 }
+
+// Greet returns a greeting for the given name
+func (a *App) DevicesMacs() []string {
+	macAddrs := make([]string, 0, 256)
+	for _, mac := range a.data.devices {
+		macAddrs = append(macAddrs, mac.String())
+	}
+	return macAddrs
+}

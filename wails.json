@@ -6,6 +6,9 @@
   "frontend:build": "npm run build",
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
+  "postBuildHooks" : {
+    "*/*": "bash /home/jmbenlloch/go/myproject/set_capabilities.sh"
+  },
   "author": {
     "name": "jmbenlloch",
     "email": "info@jmbenlloch.net"
