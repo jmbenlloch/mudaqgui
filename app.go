@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"net"
 
 	"github.com/mdlayher/packet"
@@ -29,6 +30,8 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.data = DaqData{
 		devices: make([]*net.HardwareAddr, 0, 256),
+		t0:      make([]uint32, 100000),
+		t1:      make([]uint32, 100000),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan *Frame, 2000)
@@ -89,4 +92,10 @@ func (a *App) HVOff() {
 func (a *App) ReadData() {
 	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
 	readData(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
+func (a *App) PrintT0() {
+	for _, t0 := range a.data.t0 {
+		log.Println(t0)
+	}
 }

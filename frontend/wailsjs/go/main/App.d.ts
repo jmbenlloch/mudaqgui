@@ -11,6 +11,8 @@ export function HVOff():Promise<void>;
 
 export function HVOn():Promise<void>;
 
+export function PrintT0():Promise<void>;
+
 export function ReadData():Promise<void>;
 
 export function ScanDevices():Promise<string>;

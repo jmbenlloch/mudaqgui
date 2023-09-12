@@ -22,6 +22,10 @@ export function HVOn() {
   return window['go']['main']['App']['HVOn']();
 }
 
+export function PrintT0() {
+  return window['go']['main']['App']['PrintT0']();
+}
+
 export function ReadData() {
   return window['go']['main']['App']['ReadData']();
 }

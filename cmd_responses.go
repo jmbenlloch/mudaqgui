@@ -1,21 +1,39 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
+
+	"encoding/binary"
 )
 
 type DaqData struct {
 	devices []*net.HardwareAddr
+	t0      []uint32
+	t1      []uint32
+}
+
+type EventData struct {
+	//	eventT0    bool
+	//	eventT1    bool
+	t0         uint32
+	t1         uint32
+	lostBuffer uint16
+	lostFPGA   uint16
+	charges    [32]uint16
 }
 
 func decodeFrame(recvChannel chan *Frame, data *DaqData) {
 	for {
 		frame := <-recvChannel
+		log.Printf("length %d", len(frame.Payload))
 		switch frame.Command {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
+		case FEB_DATA_CDR:
+			decodeData(frame, data)
+		case FEB_EOF_CDR:
+			log.Println("End of data")
 		default:
 			log.Fatalf("Unkown response command")
 		}
@@ -23,12 +41,91 @@ func decodeFrame(recvChannel chan *Frame, data *DaqData) {
 }
 
 func storeDeviceMac(frame *Frame, data *DaqData) {
-	log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
-	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
-	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
-	log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
+	//	log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
+	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
+	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
+	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
 
 	data.devices = append(data.devices, &frame.Source)
-	fmt.Println(frame.Source[5])
-	fmt.Println(data.devices)
+	//fmt.Println(frame.Source[5])
+	//fmt.Println(data.devices)
+}
+
+func decodeData(frame *Frame, data *DaqData) {
+	//log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
+	log.Printf("Payload length [%s] %d", frame.Source.String(), len(frame.Payload))
+
+	// Position 0:2 00 00, unused register value
+
+	data_start := 2
+	packet_size := 76
+
+	for data_start < len(frame.Payload)-2 {
+		log.Printf("reading: %d - %d", data_start, data_start+packet_size)
+		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
+		data_start += packet_size
+
+		log.Printf("[Event lost buffer] %d", evt.lostBuffer)
+		log.Printf("[Event lost fgpa] %d", evt.lostFPGA)
+		log.Printf("[t0] %d", evt.t0)
+		log.Printf("[t1] %d", evt.t1)
+	}
+
+	//s := hex.EncodeToString(frame.Payload)
+	//fmt.Println(s)
+	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
+	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
+	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
+}
+
+func decodeEvent(data []byte) *EventData {
+	var eventLostFPGA uint16 = binary.LittleEndian.Uint16(data[0:2])
+	var eventLostBuffer uint16 = binary.LittleEndian.Uint16(data[2:4])
+
+	var t0 uint32 = binary.LittleEndian.Uint32(data[4:8])
+	var t1 uint32 = binary.LittleEndian.Uint32(data[8:12])
+
+	var t0LSB uint32 = (t0 & 0x00000003)
+	var t1LSB uint32 = (t1 & 0x00000003)
+
+	t0 = (t0 & 0x3FFFFFF) >> 2
+	t1 = (t1 & 0x3FFFFFF) >> 2
+
+	t0 = grayToBin(t0)
+	t1 = grayToBin(t1)
+
+	t0 = (t0 << 2) | t0LSB
+	t1 = (t1 << 2) | t1LSB
+
+	var charges [32]uint16
+	offset := 12
+
+	for i := 0; i < 32; i++ {
+		start := offset + i*2
+		end := start + 2
+		charges[i] = binary.LittleEndian.Uint16(data[start:end])
+	}
+
+	evt := EventData{
+		lostBuffer: eventLostBuffer,
+		lostFPGA:   eventLostFPGA,
+		t0:         t0,
+		t1:         t1,
+		charges:    charges,
+	}
+	return &evt
+}
+
+// https://www.geeksforgeeks.org/gray-to-binary-and-binary-to-gray-conversion/
+func binToGray(n uint32) uint32 {
+	return n ^ (n >> 1)
+}
+
+func grayToBin(n uint32) uint32 {
+	var res uint32 = n
+	for n > 0 {
+		n >>= 1
+		res ^= n
+	}
+	return res
 }
