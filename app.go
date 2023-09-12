@@ -13,7 +13,7 @@ import (
 type App struct {
 	ctx              context.Context
 	sendFrameChannel chan *Frame
-	recvFrameChannel chan *Frame
+	recvFrameChannel chan Frame
 	data             DaqData
 	connection       *packet.Conn
 	iface            *net.Interface
@@ -34,7 +34,7 @@ func (a *App) startup(ctx context.Context) {
 		t1:      make([]uint32, 100000),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
-	a.recvFrameChannel = make(chan *Frame, 2000)
+	a.recvFrameChannel = make(chan Frame, 2000)
 
 	a.iface = getNetworkInterface("enp5s0")
 	a.connection = createSocket(a.iface)

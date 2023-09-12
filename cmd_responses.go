@@ -23,14 +23,15 @@ type EventData struct {
 	charges    [32]uint16
 }
 
-func decodeFrame(recvChannel chan *Frame, data *DaqData) {
+func decodeFrame(recvChannel chan Frame, data *DaqData) {
 	for {
 		frame := <-recvChannel
-		log.Printf("length %d", len(frame.Payload))
+		log.Printf("length %d, %s", len(frame.Payload), frame.Command)
 		switch frame.Command {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
 		case FEB_DATA_CDR:
+			log.Println("data cdr")
 			decodeData(frame, data)
 		case FEB_EOF_CDR:
 			log.Println("End of data")
@@ -40,7 +41,7 @@ func decodeFrame(recvChannel chan *Frame, data *DaqData) {
 	}
 }
 
-func storeDeviceMac(frame *Frame, data *DaqData) {
+func storeDeviceMac(frame Frame, data *DaqData) {
 	//	log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
 	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
@@ -51,7 +52,7 @@ func storeDeviceMac(frame *Frame, data *DaqData) {
 	//fmt.Println(data.devices)
 }
 
-func decodeData(frame *Frame, data *DaqData) {
+func decodeData(frame Frame, data *DaqData) {
 	//log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
 	log.Printf("Payload length [%s] %d", frame.Source.String(), len(frame.Payload))
 
@@ -61,7 +62,7 @@ func decodeData(frame *Frame, data *DaqData) {
 	packet_size := 76
 
 	for data_start < len(frame.Payload)-2 {
-		log.Printf("reading: %d - %d", data_start, data_start+packet_size)
+		log.Printf("reading: %d - %d Len: %d", data_start, data_start+packet_size, len(frame.Payload))
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
 		data_start += packet_size
 

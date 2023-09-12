@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"io"
+	"log"
 	"net"
 )
 
@@ -83,6 +84,7 @@ func (f *Frame) UnmarshalBinary(b []byte) error {
 
 	f.EtherType = EtherType(binary.BigEndian.Uint16(b[12:14]))
 	f.Command = Cmd(binary.LittleEndian.Uint16(b[14:16]))
+	log.Printf("unmarhsal cmd %s", f.Command)
 
 	// There used to be a minimum payload length restriction here, but as
 	// long as two hardware addresses and an EtherType are present, it

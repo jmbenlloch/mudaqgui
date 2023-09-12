@@ -47,7 +47,8 @@ func sendFrameViaSocket(sendChannel chan *Frame, connection *packet.Conn) {
 
 // receiveMessages continuously receives messages over a connection. The messages
 // may be up to the interface's MTU in size.
-func receiveMessages(recvChannel chan *Frame, c net.PacketConn, mtu int) {
+func receiveMessages(recvChannel chan Frame, c net.PacketConn, mtu int) {
+	log.Println("receive messages go routine")
 	var f Frame
 	b := make([]byte, mtu)
 
@@ -64,6 +65,6 @@ func receiveMessages(recvChannel chan *Frame, c net.PacketConn, mtu int) {
 			log.Fatalf("failed to unmarshal ethernet frame: %v", err)
 		}
 
-		recvChannel <- &f
+		recvChannel <- f
 	}
 }
