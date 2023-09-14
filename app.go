@@ -104,6 +104,11 @@ func (a *App) SetVCXO() {
 	setVCXO(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
+func (a *App) SetDACThr() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	setDACThr(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
 func (a *App) PrintT0() {
 	for _, t0 := range a.data.t0 {
 		log.Println(t0)

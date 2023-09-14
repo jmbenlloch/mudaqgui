@@ -34,6 +34,10 @@ export function ScanDevices() {
   return window['go']['main']['App']['ScanDevices']();
 }
 
+export function SetDACThr() {
+  return window['go']['main']['App']['SetDACThr']();
+}
+
 export function SetVCXO() {
   return window['go']['main']['App']['SetVCXO']();
 }

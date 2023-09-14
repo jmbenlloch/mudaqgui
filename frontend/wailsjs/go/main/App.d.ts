@@ -17,6 +17,8 @@ export function ReadData():Promise<void>;
 
 export function ScanDevices():Promise<string>;
 
+export function SetDACThr():Promise<void>;
+
 export function SetVCXO():Promise<void>;
 
 export function StartAcquisition():Promise<void>;

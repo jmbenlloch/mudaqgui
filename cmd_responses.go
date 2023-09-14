@@ -125,7 +125,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData) {
 			decodeRate(frame, data)
 		case FEB_DATA_CDR:
 			log.Println("data cdr")
-			//decodeData(frame, data)
+			decodeData(frame, data)
 		case FEB_EOF_CDR:
 			log.Println("End of data")
 		case FEB_OK_SCR:

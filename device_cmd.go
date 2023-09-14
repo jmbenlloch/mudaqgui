@@ -4,6 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+
+	"github.com/labstack/gommon/log"
 )
 
 func scanDeviceMac(src net.HardwareAddr, dst net.HardwareAddr) (*Frame, error) {
@@ -102,15 +104,35 @@ func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, se
 	sendChannel <- frame
 }
 
+func sendFPGAFil(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	payload := make([]byte, 2+9)
+	mask, ok := slowControlRegister["discriminatorMask"].([32]int)
+	if !ok {
+		log.Info("error")
+	}
+	binaryMask := convertToBinary(mask)
+	bits := uint32ToByteArray(binaryMask)
+	copy(payload[0:2], []byte{0x00, 0x00}) //
+	copy(payload[2:], bits)                //
+	frame, _ := buildFrame(src, dst, FEB_WR_FIL, payload)
+	sendChannel <- frame
+}
+
 func updateConfig(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	sendSlowControlConfiguration(src, dst, sendChannel)
 	sendProbeConfiguration(src, dst, sendChannel)
-	// TODO: Send FPGA FIL
+	sendFPGAFil(src, dst, sendChannel)
 }
 
 func uint16ToByteArray(value uint16) []byte {
 	array := make([]byte, 2)
 	binary.LittleEndian.PutUint16(array, value)
+	return array
+}
+
+func uint32ToByteArray(value uint32) []byte {
+	array := make([]byte, 4)
+	binary.LittleEndian.PutUint32(array, value)
 	return array
 }
 
@@ -122,4 +144,28 @@ func setVCXO(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame
 	copy(payload[2:], src)   // MAC
 	frame, _ := buildFrame(src, dst, FEB_GEN_HVOFF, payload)
 	sendChannel <- frame
+}
+
+func setDAC1Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	slowControlRegister["dac1_code"] = 768
+	sendSlowControlConfiguration(src, dst, sendChannel)
+}
+
+func setDAC2Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	slowControlRegister["dac2_code"] = 768
+	sendSlowControlConfiguration(src, dst, sendChannel)
+}
+
+func setDACThr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	setDAC1Thr(src, dst, sendChannel)
+	setDAC2Thr(src, dst, sendChannel)
+}
+
+func convertToBinary(values [32]int) uint32 {
+	var result uint32 = 0
+	for i := 0; i < len(values); i++ {
+		bit := uint32(values[i] & 0x00000001)
+		result = result | (bit << (31 - i))
+	}
+	return result
 }
