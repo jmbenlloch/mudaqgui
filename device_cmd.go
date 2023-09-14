@@ -77,9 +77,7 @@ func sendProbeConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChan
 		if (i%16 == 0) && (i > 0) {
 			fmt.Printf("\n")
 		}
-		//fmt.Printf("%02x ", value)
-		fmt.Printf("%02x ", configuration[len(configuration)-1-i])
-		_ = value
+		fmt.Printf("%02x ", value)
 	}
 	copy(payload[0:2], []byte{0x00, 0x00}) //
 	copy(payload[2:], configuration)       //
@@ -95,13 +93,11 @@ func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, se
 		if (i%16 == 0) && (i > 0) {
 			fmt.Printf("\n")
 		}
-		//fmt.Printf("%02x ", value)
-		fmt.Printf("%02x ", configuration[len(configuration)-1-i])
-		_ = value
+		fmt.Printf("%02x ", value)
 	}
 	copy(payload[0:2], []byte{0x00, 0x00}) //
 	copy(payload[2:], configuration)       //
-	frame, _ := buildFrame(src, dst, FEB_WR_PMR, payload)
+	frame, _ := buildFrame(src, dst, FEB_WR_SCR, payload)
 	sendChannel <- frame
 }
 
