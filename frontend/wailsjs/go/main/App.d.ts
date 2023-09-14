@@ -18,3 +18,5 @@ export function ReadData():Promise<void>;
 export function ScanDevices():Promise<string>;
 
 export function StartAcquisition():Promise<void>;
+
+export function UpdateConfig():Promise<void>;

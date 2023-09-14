@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net"
 )
 
@@ -23,7 +24,7 @@ func scanDevices(src net.HardwareAddr, sendChannel chan *Frame) {
 
 func getRate(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6)           // register + mac address
-	copy(payload[0:2], []byte{0x00, 0x00}) // VCXO
+	copy(payload[0:2], []byte{0x00, 0x00}) //
 	copy(payload[2:], src)                 // MAC
 	frame, _ := buildFrame(src, dst, FEB_GET_RATE, payload)
 	sendChannel <- frame
@@ -66,4 +67,45 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 	copy(payload[3:], src)                       // MAC
 	frame, _ := buildFrame(src, dst, FEB_RD_CDR, payload)
 	sendChannel <- frame
+}
+
+func sendProbeConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	payload := make([]byte, 2+(256/8)) // register + mac address
+	configuration := configurationToByteArray(256, probeRegister, citirocProbeBitPosition)
+
+	for i, value := range configuration {
+		if (i%16 == 0) && (i > 0) {
+			fmt.Printf("\n")
+		}
+		//fmt.Printf("%02x ", value)
+		fmt.Printf("%02x ", configuration[len(configuration)-1-i])
+		_ = value
+	}
+	copy(payload[0:2], []byte{0x00, 0x00}) //
+	copy(payload[2:], configuration)       //
+	frame, _ := buildFrame(src, dst, FEB_WR_PMR, payload)
+	sendChannel <- frame
+}
+
+func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	payload := make([]byte, 2+(1144/8))
+	configuration := configurationToByteArray(1144, slowControlRegister, citirocSlowControlBitPosition)
+
+	for i, value := range configuration {
+		if (i%16 == 0) && (i > 0) {
+			fmt.Printf("\n")
+		}
+		//fmt.Printf("%02x ", value)
+		fmt.Printf("%02x ", configuration[len(configuration)-1-i])
+		_ = value
+	}
+	copy(payload[0:2], []byte{0x00, 0x00}) //
+	copy(payload[2:], configuration)       //
+	frame, _ := buildFrame(src, dst, FEB_WR_PMR, payload)
+	sendChannel <- frame
+}
+
+func updateConfig(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	sendSlowControlConfiguration(src, dst, sendChannel)
+	sendProbeConfiguration(src, dst, sendChannel)
 }

@@ -37,3 +37,7 @@ export function ScanDevices() {
 export function StartAcquisition() {
   return window['go']['main']['App']['StartAcquisition']();
 }
+
+export function UpdateConfig() {
+  return window['go']['main']['App']['UpdateConfig']();
+}

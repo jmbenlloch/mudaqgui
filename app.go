@@ -94,6 +94,11 @@ func (a *App) ReadData() {
 	readData(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
+func (a *App) UpdateConfig() {
+	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	updateConfig(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}
+
 func (a *App) PrintT0() {
 	for _, t0 := range a.data.t0 {
 		log.Println(t0)

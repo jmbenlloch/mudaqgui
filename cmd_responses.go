@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"math"
 	"net"
 
 	"encoding/binary"
@@ -120,9 +122,10 @@ func decodeFrame(recvChannel chan Frame, data *DaqData) {
 		switch frame.Command {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
+			decodeRate(frame, data)
 		case FEB_DATA_CDR:
 			log.Println("data cdr")
-			decodeData(frame, data)
+			//decodeData(frame, data)
 		case FEB_EOF_CDR:
 			log.Println("End of data")
 		case FEB_OK_SCR:
@@ -177,6 +180,12 @@ func decodeData(frame Frame, data *DaqData) {
 	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
 	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
+}
+
+func decodeRate(frame Frame, data *DaqData) {
+	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
+	rate := math.Float32frombits(bits) // in Hz
+	fmt.Printf("rate: %v (0x%08x)\n", rate, bits)
 }
 
 func decodeEvent(data []byte) *EventData {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { Greet, HVOn, HVOff, ReadData, PrintT0, GetRate, StartAcquisition, DevicesMacs } from "../../wailsjs/go/main/App";
+import { Greet, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartAcquisition, DevicesMacs } from "../../wailsjs/go/main/App";
 
 function doGreeting() {
   Greet("testfn").then((result) => {
@@ -17,6 +17,12 @@ function getRate() {
 
 function readData() {
   ReadData().then(() => {
+    console.log("read data")
+  });
+}
+
+function updateConfig() {
+  UpdateConfig().then(() => {
     console.log("read data")
   });
 }
@@ -68,6 +74,7 @@ function scanDevices() {
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
     <button @click="readData()" class="btn btn-primary">Read data</button>
     <button @click="printT0()" class="btn btn-primary">T0</button>
+    <button @click="updateConfig()" class="btn btn-primary">config</button>
 
     <div>
       <h3>Devices found</h3>
