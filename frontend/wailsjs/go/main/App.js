@@ -34,6 +34,10 @@ export function ScanDevices() {
   return window['go']['main']['App']['ScanDevices']();
 }
 
+export function SetVCXO() {
+  return window['go']['main']['App']['SetVCXO']();
+}
+
 export function StartAcquisition() {
   return window['go']['main']['App']['StartAcquisition']();
 }

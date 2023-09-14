@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"net"
 )
@@ -104,4 +105,21 @@ func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, se
 func updateConfig(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	sendSlowControlConfiguration(src, dst, sendChannel)
 	sendProbeConfiguration(src, dst, sendChannel)
+	// TODO: Send FPGA FIL
+}
+
+func uint16ToByteArray(value uint16) []byte {
+	array := make([]byte, 2)
+	binary.LittleEndian.PutUint16(array, value)
+	return array
+}
+
+func setVCXO(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	payload := make([]byte, 2+6) // register + mac address
+	var vcxo uint16 = 1023
+	bits := uint16ToByteArray(vcxo)
+	copy(payload[0:2], bits) // VCXO
+	copy(payload[2:], src)   // MAC
+	frame, _ := buildFrame(src, dst, FEB_GEN_HVOFF, payload)
+	sendChannel <- frame
 }
