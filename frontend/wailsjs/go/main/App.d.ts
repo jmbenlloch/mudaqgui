@@ -19,6 +19,8 @@ export function SetDACThr():Promise<void>;
 
 export function SetVCXO():Promise<void>;
 
-export function StartAcquisition():Promise<void>;
+export function StartRun():Promise<void>;
+
+export function StopRun():Promise<void>;
 
 export function UpdateConfig():Promise<void>;

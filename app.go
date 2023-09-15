@@ -65,9 +65,12 @@ func (a *App) GetRate() {
 	getRate(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) StartAcquisition() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
-	startAcquisition(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+func (a *App) StartRun() {
+	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
+}
+
+func (a *App) StopRun() {
+	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
 }
 
 func (a *App) HVOn() {

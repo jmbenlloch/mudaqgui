@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { Ref } from 'vue'
-import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartAcquisition, DevicesMacs } from "../../wailsjs/go/main/App";
+import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun, DevicesMacs } from "../../wailsjs/go/main/App";
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -40,8 +40,14 @@ function updateConfig() {
 }
 
 function startRun() {
-  StartAcquisition().then(() => {
+  StartRun().then(() => {
     console.log("start run")
+  });
+}
+
+function stopRun() {
+  StopRun().then(() => {
+    console.log("stop run")
   });
 }
 
@@ -67,6 +73,7 @@ const macs: Ref<Array<String>>  = ref([])
 
 function showDevices() {
   DevicesMacs().then((result) => {
+    macs.value = []
     for (let mac of result){
       macs.value.push(mac)
     }
@@ -82,6 +89,7 @@ function showDevices() {
     <button @click="showDevices()" class="btn btn-primary">Show results</button>
     <button @click="getRate()" class="btn btn-primary">Get Rate</button>
     <button @click="startRun()" class="btn btn-primary">Start run</button>
+    <button @click="stopRun()" class="btn btn-primary">Stop run</button>
     <button @click="hvOn()" class="btn btn-primary">HV on</button>
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
     <button @click="readData()" class="btn btn-primary">Read data</button>

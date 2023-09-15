@@ -9,12 +9,15 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+func getMacAddressDevice(device byte) net.HardwareAddr {
+	mac := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, device}
+	return mac
+}
+
 func scanDeviceMac(src net.HardwareAddr, dst net.HardwareAddr) (*Frame, error) {
 	payload := make([]byte, 2+6)           // register + mac address
 	copy(payload[0:2], []byte{0x00, 0x00}) // VCXO
 	copy(payload[2:], src)                 // MAC
-	// fmt.Println(payload)
-
 	return buildFrame(src, dst, FEB_SET_RECV, payload)
 }
 
@@ -22,7 +25,7 @@ func scanDevices(src net.HardwareAddr, sendChannel chan *Frame) {
 	// Scan several times. For some reason boards do not always answer (timing?)
 	for scan := 0; scan <= 2; scan++ {
 		for i := 0; i <= 255; i++ {
-			dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, byte(i)}
+			dst := getMacAddressDevice(byte(i))
 			frame, _ := scanDeviceMac(src, dst)
 			sendChannel <- frame
 			time.Sleep(10 * time.Millisecond)
@@ -33,23 +36,37 @@ func scanDevices(src net.HardwareAddr, sendChannel chan *Frame) {
 
 func getRate(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6)           // register + mac address
-	copy(payload[0:2], []byte{0x00, 0x00}) //
+	copy(payload[0:2], []byte{0x00, 0x00}) // register
 	copy(payload[2:], src)                 // MAC
 	frame, _ := buildFrame(src, dst, FEB_GET_RATE, payload)
 	sendChannel <- frame
 }
 
-func startAcquisition(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+func startRun(src net.HardwareAddr, sendChannel chan *Frame) {
+	// Send to broadcast
+	dst := getMacAddressDevice(0xff)
+
 	payload := make([]byte, 2+6)           // register + mac address
-	copy(payload[0:2], []byte{0x01, 0x00}) // VCXO
+	copy(payload[0:2], []byte{0x01, 0x00}) // reset
 	copy(payload[2:], src)                 // MAC
 	frame, _ := buildFrame(src, dst, FEB_GEN_INIT, payload)
 	sendChannel <- frame
 
 	payload = make([]byte, 2+6)            // register + mac address
-	copy(payload[0:2], []byte{0x02, 0x00}) // VCXO
+	copy(payload[0:2], []byte{0x02, 0x00}) // start data acquisition
 	copy(payload[2:], src)                 // MAC
 	frame, _ = buildFrame(src, dst, FEB_GEN_INIT, payload)
+
+	sendChannel <- frame
+}
+
+func stopRun(src net.HardwareAddr, sendChannel chan *Frame) {
+	// Send to broadcast
+	dst := getMacAddressDevice(0xff)
+	payload := make([]byte, 2+6)           // register + mac address
+	copy(payload[0:2], []byte{0x00, 0x00}) // stop data acquisition
+	copy(payload[2:], src)                 // MAC
+	frame, _ := buildFrame(src, dst, FEB_GEN_INIT, payload)
 
 	sendChannel <- frame
 }

@@ -38,8 +38,12 @@ export function SetVCXO() {
   return window['go']['main']['App']['SetVCXO']();
 }
 
-export function StartAcquisition() {
-  return window['go']['main']['App']['StartAcquisition']();
+export function StartRun() {
+  return window['go']['main']['App']['StartRun']();
+}
+
+export function StopRun() {
+  return window['go']['main']['App']['StopRun']();
 }
 
 export function UpdateConfig() {
