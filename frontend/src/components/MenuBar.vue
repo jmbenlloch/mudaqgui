@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun, DevicesMacs } from "../../wailsjs/go/main/App";
+import { EventsOn } from '../../wailsjs/runtime'
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -79,6 +80,12 @@ function showDevices() {
     }
   });
 }
+
+onMounted(() => {
+  EventsOn("rate", (data) => {
+    console.log("event rate", data)
+  })
+})
 </script>
 
 <template>

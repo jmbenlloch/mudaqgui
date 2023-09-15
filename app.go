@@ -41,7 +41,7 @@ func (a *App) startup(ctx context.Context) {
 	// Start go routines
 	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
 	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
-	go decodeFrame(a.recvFrameChannel, &a.data)
+	go decodeFrame(a.recvFrameChannel, &a.data, ctx)
 }
 
 func (a *App) onshutdown(ctx context.Context) {

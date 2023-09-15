@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"math"
 	"net"
 
 	"encoding/binary"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type DaqData struct {
@@ -25,7 +28,7 @@ type EventData struct {
 	charges    [32]uint16
 }
 
-func decodeFrame(recvChannel chan Frame, data *DaqData) {
+func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 	for {
 		frame := <-recvChannel
 		log.Printf("length %d, %s", len(frame.Payload), frame.Command)
@@ -33,7 +36,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData) {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
 			if string(frame.Payload[2:9]) != "FEB_rev" {
-				decodeRate(frame, data)
+				decodeRate(frame, data, ctx)
 			}
 		case FEB_DATA_CDR:
 			log.Println("data cdr")
@@ -94,10 +97,12 @@ func decodeData(frame Frame, data *DaqData) {
 	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
 }
 
-func decodeRate(frame Frame, data *DaqData) {
+func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
 	fmt.Printf("rate: %v (0x%08x)\n", rate, bits)
+
+	runtime.EventsEmit(ctx, "rate", rate)
 }
 
 func decodeEvent(data []byte) *EventData {
