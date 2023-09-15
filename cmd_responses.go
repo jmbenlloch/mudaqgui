@@ -97,12 +97,19 @@ func decodeData(frame Frame, data *DaqData) {
 	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
 }
 
+type CardRate struct {
+	Card byte    `json:"card"`
+	Rate float32 `json:"rate"`
+}
+
 func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
 	fmt.Printf("rate: %v (0x%08x)\n", rate, bits)
 
-	runtime.EventsEmit(ctx, "rate", rate)
+	rateEvent := CardRate{Card: frame.Source[5], Rate: rate}
+	fmt.Println(rateEvent)
+	runtime.EventsEmit(ctx, "rate", rateEvent)
 }
 
 func decodeEvent(data []byte) *EventData {
