@@ -32,7 +32,9 @@ func decodeFrame(recvChannel chan Frame, data *DaqData) {
 		switch frame.Command {
 		case FEB_OK:
 			storeDeviceMac(frame, data)
-			decodeRate(frame, data)
+			if string(frame.Payload[2:9]) != "FEB_rev" {
+				decodeRate(frame, data)
+			}
 		case FEB_DATA_CDR:
 			log.Println("data cdr")
 			decodeData(frame, data)

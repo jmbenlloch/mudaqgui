@@ -73,7 +73,7 @@ func stopRun(src net.HardwareAddr, sendChannel chan *Frame) {
 
 func hvOn(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6)           // register + mac address
-	copy(payload[0:2], []byte{0x02, 0x02}) // VCXO
+	copy(payload[0:2], []byte{0x02, 0x02}) //
 	copy(payload[2:], src)                 // MAC
 	frame, _ := buildFrame(src, dst, FEB_GEN_HVON, payload)
 	sendChannel <- frame
@@ -81,7 +81,7 @@ func hvOn(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 
 func hvOff(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6)           // register + mac address
-	copy(payload[0:2], []byte{0x02, 0x02}) // VCXO
+	copy(payload[0:2], []byte{0x02, 0x02}) //
 	copy(payload[2:], src)                 // MAC
 	frame, _ := buildFrame(src, dst, FEB_GEN_HVOFF, payload)
 	sendChannel <- frame
@@ -89,7 +89,7 @@ func hvOff(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) 
 
 func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6)                 // register + mac address
-	copy(payload[0:3], []byte{0x00, 0x00, 0x00}) // VCXO
+	copy(payload[0:3], []byte{0x00, 0x00, 0x00}) //
 	copy(payload[3:], src)                       // MAC
 	frame, _ := buildFrame(src, dst, FEB_RD_CDR, payload)
 	sendChannel <- frame
