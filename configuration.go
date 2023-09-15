@@ -245,14 +245,14 @@ var slowControlRegister = map[string]any{
 }
 
 var citirocProbeBitPosition = map[string]BitPosition{
-	"fastShaperOuput":    BitPosition{starts: makeRange(0, 31), length: 1},
-	"slowShaperLGOutput": BitPosition{starts: makeRange(32, 64), length: 1},
-	"peakSensingLG":      BitPosition{starts: makeRange(64, 95), length: 1},
-	"slowShaperHGOutput": BitPosition{starts: makeRange(96, 127), length: 1},
-	"peakSensingHG":      BitPosition{starts: makeRange(128, 159), length: 1},
-	"preampHGOutput":     BitPosition{starts: makeRangeStep(160, 223, 2), length: 1},
-	"preampLGOutput":     BitPosition{starts: makeRangeStep(161, 223, 2), length: 1},
-	"inputDAC":           BitPosition{starts: makeRange(224, 255), length: 1},
+	"fastShaperOuput":    {starts: makeRange(0, 31), length: 1},
+	"slowShaperLGOutput": {starts: makeRange(32, 64), length: 1},
+	"peakSensingLG":      {starts: makeRange(64, 95), length: 1},
+	"slowShaperHGOutput": {starts: makeRange(96, 127), length: 1},
+	"peakSensingHG":      {starts: makeRange(128, 159), length: 1},
+	"preampHGOutput":     {starts: makeRangeStep(160, 223, 2), length: 1},
+	"preampLGOutput":     {starts: makeRangeStep(161, 223, 2), length: 1},
+	"inputDAC":           {starts: makeRange(224, 255), length: 1},
 }
 
 var probeRegister = map[string]any{
