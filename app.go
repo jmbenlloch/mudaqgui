@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 
@@ -29,7 +28,7 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.data = DaqData{
-		devices: make([]*net.HardwareAddr, 0, 256),
+		devices: make(map[byte]*net.HardwareAddr),
 		t0:      make([]uint32, 100000),
 		t1:      make([]uint32, 100000),
 	}
@@ -38,29 +37,21 @@ func (a *App) startup(ctx context.Context) {
 
 	a.iface = getNetworkInterface("enp5s0")
 	a.connection = createSocket(a.iface)
+
+	// Start go routines
+	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
+	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
+	go decodeFrame(a.recvFrameChannel, &a.data)
 }
 
 func (a *App) onshutdown(ctx context.Context) {
 	a.connection.Close()
 }
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
-	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
-	go decodeFrame(a.recvFrameChannel, &a.data)
+func (a *App) ScanDevices() {
 	scanDevices(a.iface.HardwareAddr, a.sendFrameChannel)
-	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-// Greet returns a greeting for the given name
-func (a *App) ScanDevices() string {
-	macAddrs := fmt.Sprint(a.data.devices)
-	fmt.Println(macAddrs)
-	return macAddrs
-}
-
-// Greet returns a greeting for the given name
 func (a *App) DevicesMacs() []string {
 	macAddrs := make([]string, 0, 256)
 	for _, mac := range a.data.devices {

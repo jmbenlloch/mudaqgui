@@ -10,7 +10,7 @@ import (
 )
 
 type DaqData struct {
-	devices []*net.HardwareAddr
+	devices map[byte]*net.HardwareAddr
 	t0      []uint32
 	t1      []uint32
 }
@@ -56,7 +56,7 @@ func storeDeviceMac(frame Frame, data *DaqData) {
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
 
-	data.devices = append(data.devices, &frame.Source)
+	data.devices[frame.Source[5]] = &frame.Source
 	//fmt.Println(frame.Source[5])
 	//fmt.Println(data.devices)
 }

@@ -10,10 +10,6 @@ export function GetRate() {
   return window['go']['main']['App']['GetRate']();
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
-}
-
 export function HVOff() {
   return window['go']['main']['App']['HVOff']();
 }

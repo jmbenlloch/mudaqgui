@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/labstack/gommon/log"
 )
@@ -18,10 +19,15 @@ func scanDeviceMac(src net.HardwareAddr, dst net.HardwareAddr) (*Frame, error) {
 }
 
 func scanDevices(src net.HardwareAddr, sendChannel chan *Frame) {
-	for i := 0; i <= 255; i++ {
-		dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, byte(i)}
-		frame, _ := scanDeviceMac(src, dst)
-		sendChannel <- frame
+	// Scan several times. For some reason boards do not always answer (timing?)
+	for scan := 0; scan <= 2; scan++ {
+		for i := 0; i <= 255; i++ {
+			dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, byte(i)}
+			frame, _ := scanDeviceMac(src, dst)
+			sendChannel <- frame
+			time.Sleep(10 * time.Millisecond)
+		}
+		time.Sleep(1 * time.Second)
 	}
 }
 
