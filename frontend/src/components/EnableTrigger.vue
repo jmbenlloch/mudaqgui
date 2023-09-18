@@ -10,13 +10,10 @@ const store = useConfigStore()
 const { slowControl } = storeToRefs(store)
 
 watch(triggerEnable, (value) => {
-  console.log(value)
   const array: Array<number> = Array(nChannels.value).fill(0)
   for (let ch of triggerEnable.value) {
-    console.log(ch)
     array[ch] = 1
   }
-  console.log(array)
   slowControl.value.discriminatorMask = array
 })
 

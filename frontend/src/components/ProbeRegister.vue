@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useConfigStore } from '../stores/configuration'
+import { storeToRefs } from 'pinia'
 
-const probeRegister = ref([])
+const store = useConfigStore()
+const { probe } = storeToRefs(store)
+
+const probeRegister = ref(-1)
 const nChannels = ref(32)
 
+watch(probeRegister, (value) => {
+  if (value > -1) {
+    const array: Array<number> = Array(nChannels.value).fill(0)
+    array[probeRegister.value] = 1
+    probe.value.peakSensingHG = array
+  }
+})
 </script>
 
 <template>
@@ -14,8 +26,9 @@ const nChannels = ref(32)
         <label class="label">
           <span class="label-text">Select channel</span>
         </label>
-        <select class="select select-bordered">
-          <option v-for="n in nChannels" :value="n">Channel {{ n }}</option>
+        <select v-model="probeRegister" class="select select-bordered">
+          <option :value="-1">None</option>
+          <option v-for="n in nChannels" :value="n - 1">Channel {{ n }}</option>
         </select>
       </div>
     </div>
