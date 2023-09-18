@@ -94,16 +94,6 @@ onMounted(() => {
     card.value = data.card
   })
 
-  EventsOn("configSlowControl", (data) => {
-    console.log("SC", data)
-    configSC.value = data
-  })
-
-  EventsOn("configProbe", (data) => {
-    console.log("Probe", data)
-    configProbe.value = data
-  })
-
 })
 </script>
 
