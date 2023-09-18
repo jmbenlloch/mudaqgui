@@ -10,7 +10,7 @@ import MenuBar from '../components/MenuBar.vue';
   <main>
     <h1 class="text-sm">NEXT Muon DAQ</h1>
 
-    <div class="grid grid-flow-col">
+    <div class="flex flex-row">
       <div class="w-1/6">
         <MenuBar />
       </div>

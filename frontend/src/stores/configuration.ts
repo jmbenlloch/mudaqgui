@@ -13,6 +13,10 @@ type slowControlConfig = {
   dac2_code: number,
 }
 
+type probeConfig = {
+  peakSensingHG: Array<number>,
+}
+
 export const useConfigStore = defineStore('config', () => {
   const slowControl: Ref<slowControlConfig> = ref({
     channel_preamp_HG: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
@@ -23,7 +27,9 @@ export const useConfigStore = defineStore('config', () => {
     dac1_code: 0,
     dac2_code: 0,
   })
-  const probe = ref({})
+  const probe: Ref<probeConfig> = ref({
+    peakSensingHG: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
+  })
 
 
   EventsOn("configSlowControl", (data) => {

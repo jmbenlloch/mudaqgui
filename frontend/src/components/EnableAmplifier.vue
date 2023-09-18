@@ -33,8 +33,6 @@ watch(ampEnable, (value) => {
 
 <template>
   <div>
-    {{  slowControl }}
-    {{  ampEnable }}
     <h2 class="font-bold text-xl">Enable Amplifier</h2>
     <div class="border border-primary w-fit grid grid-cols-4 gap-2">
       <div class="form-control" v-for="n in nChannels">
