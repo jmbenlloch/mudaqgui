@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun, DevicesMacs } from "../../wailsjs/go/main/App";
-import { EventsOn } from '../../wailsjs/runtime'
+import { EventsOn } from '../../wailsjs/runtime/runtime'
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -81,10 +81,29 @@ function showDevices() {
   });
 }
 
+const rate = ref(0)
+const card = ref(0)
+
+const configSC = ref({})
+const configProbe = ref({})
+
 onMounted(() => {
   EventsOn("rate", (data) => {
     console.log("event rate", data)
+    rate.value = data.rate
+    card.value = data.card
   })
+
+  EventsOn("configSlowControl", (data) => {
+    console.log("SC", data)
+    configSC.value = data
+  })
+
+  EventsOn("configProbe", (data) => {
+    console.log("Probe", data)
+    configProbe.value = data
+  })
+
 })
 </script>
 
@@ -105,11 +124,22 @@ onMounted(() => {
     <button @click="setVCXO()" class="btn btn-primary">VCXO</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
 
+    <h1>Rate {{ card }}: {{ rate }}</h1>
+
     <div>
       <h3>Devices found</h3>
       <ul>
         <li v-for="mac in macs">{{ mac }}</li>
       </ul>
+
+      <div class="form-control max-w-xs">
+        <label class="label">
+          <span class="label-text">Select card</span>
+        </label>
+        <select class="select select-bordered">
+          <option v-for="mac in macs" :value="mac">Card {{ mac }}</option>
+        </select>
+      </div>
 
     </div>
 

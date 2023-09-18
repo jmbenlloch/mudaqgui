@@ -28,9 +28,11 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	a.data = DaqData{
-		devices: make(map[byte]*net.HardwareAddr),
-		t0:      make([]uint32, 100000),
-		t1:      make([]uint32, 100000),
+		devices:                  make(map[byte]*net.HardwareAddr),
+		slowControlConfiguration: make(map[byte]map[string]any),
+		probeConfiguration:       make(map[byte]map[string]any),
+		t0:                       make([]uint32, 100000),
+		t1:                       make([]uint32, 100000),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)

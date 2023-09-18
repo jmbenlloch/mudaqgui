@@ -97,7 +97,7 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 
 func sendProbeConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(256/8)) // register + mac address
-	configuration := configurationToByteArray(256, probeRegister, citirocProbeBitPosition)
+	configuration := configurationToByteArray(256, createDefaultProbeRegisterConfiguration(), citirocProbeBitPosition)
 
 	for i, value := range configuration {
 		if (i%16 == 0) && (i > 0) {
@@ -113,7 +113,7 @@ func sendProbeConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChan
 
 func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(1144/8))
-	configuration := configurationToByteArray(1144, slowControlRegister, citirocSlowControlBitPosition)
+	configuration := configurationToByteArray(1144, createDefaultSlowControlConfiguration(), citirocSlowControlBitPosition)
 
 	for i, value := range configuration {
 		if (i%16 == 0) && (i > 0) {
@@ -129,7 +129,7 @@ func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, se
 
 func sendFPGAFil(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+9)
-	mask, ok := slowControlRegister["discriminatorMask"].([32]int)
+	mask, ok := createDefaultSlowControlConfiguration()["discriminatorMask"].([32]int)
 	if !ok {
 		log.Info("error")
 	}
@@ -170,12 +170,12 @@ func setVCXO(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame
 }
 
 func setDAC1Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	slowControlRegister["dac1_code"] = 768
+	createDefaultSlowControlConfiguration()["dac1_code"] = 768
 	sendSlowControlConfiguration(src, dst, sendChannel)
 }
 
 func setDAC2Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	slowControlRegister["dac2_code"] = 768
+	createDefaultSlowControlConfiguration()["dac2_code"] = 768
 	sendSlowControlConfiguration(src, dst, sendChannel)
 }
 

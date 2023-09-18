@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math"
 	"net"
@@ -13,9 +12,11 @@ import (
 )
 
 type DaqData struct {
-	devices map[byte]*net.HardwareAddr
-	t0      []uint32
-	t1      []uint32
+	devices                  map[byte]*net.HardwareAddr
+	slowControlConfiguration map[byte]map[string]any
+	probeConfiguration       map[byte]map[string]any
+	t0                       []uint32
+	t1                       []uint32
 }
 
 type EventData struct {
@@ -34,7 +35,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 		log.Printf("length %d, %s", len(frame.Payload), frame.Command)
 		switch frame.Command {
 		case FEB_OK:
-			storeDeviceMac(frame, data)
+			storeDeviceMac(frame, data, ctx)
 			if string(frame.Payload[2:9]) != "FEB_rev" {
 				decodeRate(frame, data, ctx)
 			}
@@ -55,7 +56,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 	}
 }
 
-func storeDeviceMac(frame Frame, data *DaqData) {
+func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	//	log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
 	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
@@ -64,6 +65,10 @@ func storeDeviceMac(frame Frame, data *DaqData) {
 	data.devices[frame.Source[5]] = &frame.Source
 	//fmt.Println(frame.Source[5])
 	//fmt.Println(data.devices)
+	data.slowControlConfiguration[frame.Source[5]] = createDefaultSlowControlConfiguration()
+	data.probeConfiguration[frame.Source[5]] = createDefaultProbeRegisterConfiguration()
+
+	sendConfigToUI(data, ctx)
 }
 
 func decodeData(frame Frame, data *DaqData) {
@@ -105,10 +110,7 @@ type CardRate struct {
 func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
-	fmt.Printf("rate: %v (0x%08x)\n", rate, bits)
-
 	rateEvent := CardRate{Card: frame.Source[5], Rate: rate}
-	fmt.Println(rateEvent)
 	runtime.EventsEmit(ctx, "rate", rateEvent)
 }
 
