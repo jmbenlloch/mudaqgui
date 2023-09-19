@@ -25,23 +25,33 @@ type probeConfigs = {
   [index: number]: probeConfig,
 }
 
+function slowControlDefaultValue() : slowControlConfig {
+  const configuration: slowControlConfig = {
+    channel_preamp_HG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    input_dac: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    channel_preamp_disable: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    discriminatorMask: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    enable_or32: 0,
+    dac1_code: 0,
+    dac2_code: 0,
+  }
+  return configuration
+}
+
+function probeDefaultValue() : probeConfig {
+  const configuration: probeConfig = {
+      peakSensingHG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  }
+  return configuration
+}
+
 export const useConfigStore = defineStore('config', () => {
   const nonValidCardID = 1024
   const slowControl: Ref<slowControlConfigs> = ref({
-    [nonValidCardID]: {
-      channel_preamp_HG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      input_dac: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      channel_preamp_disable: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      discriminatorMask: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      enable_or32: 0,
-      dac1_code: 0,
-      dac2_code: 0,
-    },
+    [nonValidCardID]: slowControlDefaultValue(),
   })
   const probe: Ref<probeConfigs> = ref({
-    [nonValidCardID]: {
-      peakSensingHG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    }
+    [nonValidCardID]: probeDefaultValue(),
   })
 
   const cards: Ref<Array<Number>> = ref([])
@@ -52,11 +62,13 @@ export const useConfigStore = defineStore('config', () => {
   EventsOn("configSlowControl", (data) => {
     console.log("SC", data)
     slowControl.value = data
+    slowControl.value[nonValidCardID] = slowControlDefaultValue()
   })
 
   EventsOn("configProbe", (data) => {
     console.log("Probe", data)
     probe.value = data
+    probe.value[nonValidCardID] = probeDefaultValue()
   })
 
   EventsOn("cards", (data: Array<Number>) => {
