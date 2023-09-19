@@ -5,6 +5,7 @@ import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 import { ScanDevices, UpdateGlobalConfig, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import { EventsOn } from '../../wailsjs/runtime/runtime'
+import Rate from './Rate.vue';
 
 
 const store = useConfigStore()
@@ -63,17 +64,6 @@ function updateGlobalConfig() {
     console.log("update all configs")
   });
 }
-
-const rate = ref(0)
-const card = ref(0)
-
-onMounted(() => {
-  EventsOn("rate", (data) => {
-    console.log("event rate", data)
-    rate.value = data.rate
-    card.value = data.card
-  })
-})
 </script>
 
 <template>
@@ -90,7 +80,7 @@ onMounted(() => {
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
     <button @click="updateGlobalConfig()" class="btn btn-primary">Send configuration to all cards</button>
 
-    <h1>Rate {{ card }}: {{ rate }}</h1>
+    <Rate />
 
     <div>
       <h3>Devices found</h3>
