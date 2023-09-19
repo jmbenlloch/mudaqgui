@@ -25,7 +25,7 @@ type probeConfigs = {
   [index: number]: probeConfig,
 }
 
-function slowControlDefaultValue() : slowControlConfig {
+function slowControlDefaultValue(): slowControlConfig {
   const configuration: slowControlConfig = {
     channel_preamp_HG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     input_dac: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -38,9 +38,9 @@ function slowControlDefaultValue() : slowControlConfig {
   return configuration
 }
 
-function probeDefaultValue() : probeConfig {
+function probeDefaultValue(): probeConfig {
   const configuration: probeConfig = {
-      peakSensingHG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    peakSensingHG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   }
   return configuration
 }
@@ -57,18 +57,25 @@ export const useConfigStore = defineStore('config', () => {
   const cards: Ref<Array<Number>> = ref([])
   // 1024 is a special value for initialization. Max card id is 255.
   const selectedCard: Ref<number> = ref(nonValidCardID)
+  console.log(selectedCard.value)
   const disableForms = computed(() => selectedCard.value == nonValidCardID)
 
   EventsOn("configSlowControl", (data) => {
     console.log("SC", data)
     slowControl.value = data
     slowControl.value[nonValidCardID] = slowControlDefaultValue()
+    if (selectedCard.value == nonValidCardID) {
+      selectedCard.value = parseInt(Object.keys(slowControl.value)[0])
+    }
   })
 
   EventsOn("configProbe", (data) => {
     console.log("Probe", data)
     probe.value = data
     probe.value[nonValidCardID] = probeDefaultValue()
+    if (selectedCard.value == nonValidCardID) {
+      selectedCard.value = parseInt(Object.keys(probe.value)[0])
+    }
   })
 
   EventsOn("cards", (data: Array<Number>) => {
