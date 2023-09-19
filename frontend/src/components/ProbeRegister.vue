@@ -4,7 +4,7 @@ import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 
 const store = useConfigStore()
-const { probe, disableForms } = storeToRefs(store)
+const { probe, selectedCard, disableForms } = storeToRefs(store)
 
 const probeRegister = ref(-1)
 const nChannels = ref(32)
@@ -13,7 +13,7 @@ watch(probeRegister, (value) => {
   if (value > -1) {
     const array: Array<number> = Array(nChannels.value).fill(0)
     array[probeRegister.value] = 1
-    probe.value.peakSensingHG = array
+    probe.value[selectedCard.value].peakSensingHG = array
   }
 })
 </script>

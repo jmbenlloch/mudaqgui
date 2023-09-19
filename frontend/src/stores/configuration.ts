@@ -17,23 +17,37 @@ type probeConfig = {
   peakSensingHG: Array<number>,
 }
 
+type slowControlConfigs = {
+  [index: number]: slowControlConfig,
+}
+
+type probeConfigs = {
+  [index: number]: probeConfig,
+}
+
 export const useConfigStore = defineStore('config', () => {
-  const slowControl: Ref<slowControlConfig> = ref({
-    channel_preamp_HG: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-    input_dac: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-    channel_preamp_disable: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-    discriminatorMask: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
-    enable_or32: 0,
-    dac1_code: 0,
-    dac2_code: 0,
+  const nonValidCardID = 1024
+  const slowControl: Ref<slowControlConfigs> = ref({
+    [nonValidCardID]: {
+      channel_preamp_HG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      input_dac: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      channel_preamp_disable: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      discriminatorMask: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      enable_or32: 0,
+      dac1_code: 0,
+      dac2_code: 0,
+    },
   })
-  const probe: Ref<probeConfig> = ref({
-    peakSensingHG: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
+  const probe: Ref<probeConfigs> = ref({
+    [nonValidCardID]: {
+      peakSensingHG: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    }
   })
 
-  const cards : Ref<Array<Number>> = ref([])
-  const selectedCard : Ref<number> = ref(-1)
-  const disableForms = computed(() => selectedCard.value < 0)
+  const cards: Ref<Array<Number>> = ref([])
+  // 1024 is a special value for initialization. Max card id is 255.
+  const selectedCard: Ref<number> = ref(nonValidCardID)
+  const disableForms = computed(() => selectedCard.value == nonValidCardID)
 
   EventsOn("configSlowControl", (data) => {
     console.log("SC", data)

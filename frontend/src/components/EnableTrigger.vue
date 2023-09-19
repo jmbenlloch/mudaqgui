@@ -7,14 +7,14 @@ const triggerEnable = ref([])
 const nChannels = ref(32)
 
 const store = useConfigStore()
-const { slowControl, disableForms } = storeToRefs(store)
+const { slowControl, disableForms, selectedCard } = storeToRefs(store)
 
 watch(triggerEnable, (value) => {
   const array: Array<number> = Array(nChannels.value).fill(0)
   for (let ch of triggerEnable.value) {
     array[ch] = 1
   }
-  slowControl.value.discriminatorMask = array
+  slowControl.value[selectedCard.value].discriminatorMask = array
 })
 
 
@@ -34,7 +34,7 @@ watch(triggerEnable, (value) => {
 
     <div class="form-control">
       <label class="label cursor-pointer">
-        <input v-model="slowControl.enable_or32" type="checkbox" class="checkbox" :true-value="1" :false-value="0" :disabled="disableForms"/>
+        <input v-model="slowControl[selectedCard].enable_or32" type="checkbox" class="checkbox" :true-value="1" :false-value="0" :disabled="disableForms"/>
         <span class="label-text text-lg">Trigger OR 32</span>
       </label>
     </div>

@@ -27,7 +27,7 @@ watch(ampEnable, (value) => {
     array[ch] = 0
   }
   console.log(array)
-  slowControl.value.channel_preamp_disable = array
+  slowControl.value[selectedCard.value].channel_preamp_disable = array
 })
 </script>
 
