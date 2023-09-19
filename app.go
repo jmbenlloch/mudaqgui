@@ -17,6 +17,7 @@ type App struct {
 	data             DaqData
 	connection       *packet.Conn
 	iface            *net.Interface
+	dataTaking       bool
 }
 
 // NewApp creates a new App application struct
@@ -28,6 +29,7 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	a.dataTaking = false
 	a.data = DaqData{
 		devices:                  make(map[byte]*net.HardwareAddr),
 		slowControlConfiguration: make(map[byte]map[string]any),
@@ -60,10 +62,14 @@ func (a *App) GetRate() {
 
 func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
+	a.dataTaking = true
+	devices := maps.Values(a.data.devices)
+	go readAllCards(a.iface.HardwareAddr, devices, a.sendFrameChannel, a)
 }
 
 func (a *App) StopRun() {
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
+	a.dataTaking = false
 }
 
 func (a *App) HVOn() {

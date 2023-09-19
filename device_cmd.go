@@ -95,6 +95,18 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 	sendChannel <- frame
 }
 
+func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel chan *Frame, a *App) {
+	for a.dataTaking {
+		fmt.Println(a.dataTaking)
+		fmt.Printf("len channel: %v\n", len(sendChannel))
+		time.Sleep(50 * time.Millisecond)
+		for _, dst := range devices {
+			getRate(src, *dst, sendChannel)
+			readData(src, *dst, sendChannel)
+		}
+	}
+}
+
 func sendProbeConfiguration(configuration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(256/8)) // register + mac address
 	fmt.Println("probe register")
