@@ -4,7 +4,7 @@ import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 
 const store = useConfigStore()
-const { slowControl, probe, selectedCard } = storeToRefs(store)
+const { slowControl, probe, selectedCard, disableForms } = storeToRefs(store)
 
 function updateConfigFromUI() {
   UpdateCardConfig(selectedCard.value, slowControl.value, probe.value).then(() => {
@@ -15,6 +15,6 @@ function updateConfigFromUI() {
 
 <template>
   <div>
-    <button @click="updateConfigFromUI()" class="btn btn-primary">Send card configuration</button>
+    <button @click="updateConfigFromUI()" class="btn btn-primary" :disabled="disableForms">Send card configuration</button>
   </div>
 </template>

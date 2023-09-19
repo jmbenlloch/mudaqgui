@@ -9,7 +9,7 @@ import Rate from './Rate.vue';
 
 
 const store = useConfigStore()
-const { slowControl, probe, cards, selectedCard } = storeToRefs(store)
+const { slowControl, probe, cards, selectedCard, disableForms } = storeToRefs(store)
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -78,7 +78,7 @@ function updateGlobalConfig() {
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
     <button @click="readData()" class="btn btn-primary">Read data</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
-    <button @click="updateGlobalConfig()" class="btn btn-primary">Send configuration to all cards</button>
+    <button @click="updateGlobalConfig()" :disabled="disableForms" class="btn btn-primary">Send configuration to all cards</button>
 
     <Rate />
 
