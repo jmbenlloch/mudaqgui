@@ -4,6 +4,7 @@ import EnableAmplifier from '../components/EnableAmplifier.vue'
 import ProbeRegister from '../components/ProbeRegister.vue'
 import GainBias from '../components/GainBias.vue';
 import MenuBar from '../components/MenuBar.vue';
+import SetDAC from '@/components/SetDAC.vue';
 </script>
 
 <template>
@@ -17,8 +18,11 @@ import MenuBar from '../components/MenuBar.vue';
       <div class="flex gap-3">
         <EnableAmplifier/>
         <EnableTrigger/>
-        <ProbeRegister />
-        <GainBias />
+        <div class="flex flex-col gap-3">
+          <ProbeRegister />
+          <SetDAC />
+        </div>
+          <GainBias />
       </div>
     </div>
   </main>
