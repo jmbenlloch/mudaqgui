@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import MenuBar from '../components/MenuBar.vue';
 import ConfigurationView from './ConfigurationView.vue';
+import EventsView from './EventsView.vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 </script>
 
@@ -24,7 +25,9 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
             <TabPanel>
               <ConfigurationView />
             </TabPanel>
-            <TabPanel>Content 2</TabPanel>
+            <TabPanel>
+              <EventsView />
+            </TabPanel>
             <TabPanel>Content 3</TabPanel>
           </TabPanels>
         </TabGroup>

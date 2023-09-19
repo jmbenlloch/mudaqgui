@@ -6,7 +6,6 @@ import GainBias from '../components/GainBias.vue';
 import SetDAC from '@/components/SetDAC.vue';
 import SetVCXO from '@/components/SetVCXO.vue';
 import SendCardConfig from '@/components/SendCardConfig.vue';
-import Events from '@/components/Events.vue';
 </script>
 
 <template>
@@ -20,6 +19,5 @@ import Events from '@/components/Events.vue';
     </div>
     <GainBias />
     <SendCardConfig />
-    <Events />
   </div>
 </template>

@@ -15,6 +15,7 @@
   "dependencies": {
     "@headlessui/tailwindcss": "^0.2.0",
     "@headlessui/vue": "^1.7.16",
+    "d3": "^7.8.5",
     "lodash": "^4.17.21",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",
