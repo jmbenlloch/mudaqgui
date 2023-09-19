@@ -15,18 +15,17 @@ type DaqData struct {
 	devices                  map[byte]*net.HardwareAddr
 	slowControlConfiguration map[byte]map[string]any
 	probeConfiguration       map[byte]map[string]any
-	t0                       []uint32
-	t1                       []uint32
+	events                   map[byte][]EventData
 }
 
 type EventData struct {
 	//	eventT0    bool
 	//	eventT1    bool
-	t0         uint32
-	t1         uint32
-	lostBuffer uint16
-	lostFPGA   uint16
-	charges    [32]uint16
+	T0         uint32     `json="t0"`
+	T1         uint32     `json="t1"`
+	LostBuffer uint16     `json="lostBuffer"`
+	LostFPGA   uint16     `json="lostFGPA"`
+	Charges    [32]uint16 `json="charges"`
 }
 
 func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
@@ -41,7 +40,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 			}
 		case FEB_DATA_CDR:
 			log.Println("data cdr")
-			//decodeData(frame, data)
+			decodeData(frame, data, ctx)
 		case FEB_EOF_CDR:
 			log.Println("End of data")
 		case FEB_OK_SCR:
@@ -68,6 +67,11 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	data.slowControlConfiguration[frame.Source[5]] = createDefaultSlowControlConfiguration()
 	data.probeConfiguration[frame.Source[5]] = createDefaultProbeRegisterConfiguration()
 
+	// Add new list to events if this card did not exist
+	if _, exists := data.events[frame.Source[5]]; !exists {
+		data.events[frame.Source[5]] = make([]EventData, 0, 10000)
+	}
+
 	cards := make([]int, 0, len(data.devices))
 	for key, _ := range data.devices {
 		cards = append(cards, int(key))
@@ -79,7 +83,7 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	sendConfigToUI(data, ctx)
 }
 
-func decodeData(frame Frame, data *DaqData) {
+func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 	//log.Printf("[%s] %s", frame.Source.String(), string(frame.Payload))
 	log.Printf("Payload length [%s] %d", frame.Source.String(), len(frame.Payload))
 
@@ -93,15 +97,19 @@ func decodeData(frame Frame, data *DaqData) {
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
 		data_start += packet_size
 
-		log.Printf("[Event lost buffer] %d", evt.lostBuffer)
-		log.Printf("[Event lost fgpa] %d", evt.lostFPGA)
-		log.Printf("[t0] %d", evt.t0)
-		log.Printf("[t1] %d", evt.t1)
+		data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
+
+		log.Printf("[Event lost buffer] %d", evt.LostBuffer)
+		log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
+		log.Printf("[t0] %d", evt.T0)
+		log.Printf("[t1] %d", evt.T1)
 
 		for i := 0; i < 32; i++ {
-			log.Printf("charge[%d]: %d", i, evt.charges[i])
+			log.Printf("charge[%d]: %d", i, evt.Charges[i])
 		}
 	}
+
+	runtime.EventsEmit(ctx, "events", data.events)
 
 	//s := hex.EncodeToString(frame.Payload)
 	//fmt.Println(s)
@@ -151,11 +159,11 @@ func decodeEvent(data []byte) *EventData {
 	}
 
 	evt := EventData{
-		lostBuffer: eventLostBuffer,
-		lostFPGA:   eventLostFPGA,
-		t0:         t0,
-		t1:         t1,
-		charges:    charges,
+		LostBuffer: eventLostBuffer,
+		LostFPGA:   eventLostFPGA,
+		T0:         t0,
+		T1:         t1,
+		Charges:    charges,
 	}
 	return &evt
 }

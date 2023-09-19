@@ -34,6 +34,7 @@ func (a *App) startup(ctx context.Context) {
 		devices:                  make(map[byte]*net.HardwareAddr),
 		slowControlConfiguration: make(map[byte]map[string]any),
 		probeConfiguration:       make(map[byte]map[string]any),
+		events:                   make(map[byte][]EventData),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)
