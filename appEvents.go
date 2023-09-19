@@ -33,3 +33,7 @@ func sendConfigToUI(data *DaqData, ctx context.Context) {
 	runtime.EventsEmit(ctx, "configSlowControl", slowControl)
 	runtime.EventsEmit(ctx, "configProbe", probe)
 }
+
+func readConfigFromUI(data *DaqData, ctx context.Context) {
+
+}

@@ -3,12 +3,12 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateCardConfig, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import { EventsOn } from '../../wailsjs/runtime/runtime'
 
 
 const store = useConfigStore()
-const { cards, selectedCard } = storeToRefs(store)
+const { slowControl, probe, cards, selectedCard } = storeToRefs(store)
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -34,9 +34,9 @@ function readData() {
   });
 }
 
-function updateConfig() {
-  UpdateConfig().then(() => {
-    console.log("read data")
+function updateConfigFromUI() {
+  UpdateCardConfig(selectedCard.value, slowControl.value, probe.value).then(() => {
+    console.log("test param")
   });
 }
 
@@ -49,12 +49,6 @@ function startRun() {
 function stopRun() {
   StopRun().then(() => {
     console.log("stop run")
-  });
-}
-
-function printT0() {
-  PrintT0().then(() => {
-    console.log("start run")
   });
 }
 
@@ -93,9 +87,8 @@ onMounted(() => {
     <button @click="hvOn()" class="btn btn-primary">HV on</button>
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
     <button @click="readData()" class="btn btn-primary">Read data</button>
-    <button @click="printT0()" class="btn btn-primary">T0</button>
-    <button @click="updateConfig()" class="btn btn-primary">config</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
+    <button @click="updateConfigFromUI()" class="btn btn-primary">Test UI</button>
 
     <h1>Rate {{ card }}: {{ rate }}</h1>
 

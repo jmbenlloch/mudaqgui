@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"log"
+	"fmt"
 	"net"
 
 	"github.com/mdlayher/packet"
@@ -31,8 +31,6 @@ func (a *App) startup(ctx context.Context) {
 		devices:                  make(map[byte]*net.HardwareAddr),
 		slowControlConfiguration: make(map[byte]map[string]any),
 		probeConfiguration:       make(map[byte]map[string]any),
-		t0:                       make([]uint32, 100000),
-		t1:                       make([]uint32, 100000),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)
@@ -82,11 +80,6 @@ func (a *App) ReadData() {
 	readData(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) UpdateConfig() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
-	updateConfig(a.iface.HardwareAddr, dst, a.sendFrameChannel)
-}
-
 func (a *App) SetVCXO() {
 	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
 	setVCXO(a.iface.HardwareAddr, dst, a.sendFrameChannel)
@@ -97,8 +90,22 @@ func (a *App) SetDACThr() {
 	setDACThr(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) PrintT0() {
-	for _, t0 := range a.data.t0 {
-		log.Println(t0)
+func (a *App) UpdateCardConfig(card int, slowControl map[string]any, probe map[string]any) {
+	fmt.Println(card)
+	fmt.Println(slowControl)
+	fmt.Println(probe)
+
+	cardID := byte(card)
+
+	for key, value := range slowControl {
+		a.data.slowControlConfiguration[cardID][key] = value
 	}
+
+	for key, value := range probe {
+		a.data.probeConfiguration[cardID][key] = value
+	}
+
+	src := a.iface.HardwareAddr
+	dst := a.data.devices[cardID]
+	updateCardConfig(cardID, &a.data, src, *dst, a.sendFrameChannel)
 }

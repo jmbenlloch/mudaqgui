@@ -7,8 +7,6 @@ export function HVOff():Promise<void>;
 
 export function HVOn():Promise<void>;
 
-export function PrintT0():Promise<void>;
-
 export function ReadData():Promise<void>;
 
 export function ScanDevices():Promise<void>;
@@ -21,4 +19,4 @@ export function StartRun():Promise<void>;
 
 export function StopRun():Promise<void>;
 
-export function UpdateConfig():Promise<void>;
+export function UpdateCardConfig(arg1:number,arg2:{[key: string]: any},arg3:{[key: string]: any}):Promise<void>;

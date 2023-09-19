@@ -95,34 +95,41 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 	sendChannel <- frame
 }
 
-func sendProbeConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+func sendProbeConfiguration(configuration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(256/8)) // register + mac address
-	configuration := configurationToByteArray(256, createDefaultProbeRegisterConfiguration(), citirocProbeBitPosition)
+	fmt.Println("probe register")
+	fmt.Println(configuration)
+	fmt.Println("finished")
+	configuration2 := createDefaultProbeRegisterConfiguration()
+	fmt.Println("probe register2")
+	fmt.Println(configuration2)
+	fmt.Println("finished")
+	configurationBytes := configurationToByteArray(256, configuration, citirocProbeBitPosition)
 
-	for i, value := range configuration {
+	for i, value := range configurationBytes {
 		if (i%16 == 0) && (i > 0) {
 			fmt.Printf("\n")
 		}
 		fmt.Printf("%02x ", value)
 	}
 	copy(payload[0:2], []byte{0x00, 0x00}) //
-	copy(payload[2:], configuration)       //
+	copy(payload[2:], configurationBytes)  //
 	frame, _ := buildFrame(src, dst, FEB_WR_PMR, payload)
 	sendChannel <- frame
 }
 
-func sendSlowControlConfiguration(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+func sendSlowControlConfiguration(configuration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(1144/8))
-	configuration := configurationToByteArray(1144, createDefaultSlowControlConfiguration(), citirocSlowControlBitPosition)
+	configurationBytes := configurationToByteArray(1144, configuration, citirocSlowControlBitPosition)
 
-	for i, value := range configuration {
+	for i, value := range configurationBytes {
 		if (i%16 == 0) && (i > 0) {
 			fmt.Printf("\n")
 		}
 		fmt.Printf("%02x ", value)
 	}
 	copy(payload[0:2], []byte{0x00, 0x00}) //
-	copy(payload[2:], configuration)       //
+	copy(payload[2:], configurationBytes)  //
 	frame, _ := buildFrame(src, dst, FEB_WR_SCR, payload)
 	sendChannel <- frame
 }
@@ -141,9 +148,9 @@ func sendFPGAFil(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *F
 	sendChannel <- frame
 }
 
-func updateConfig(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	sendSlowControlConfiguration(src, dst, sendChannel)
-	sendProbeConfiguration(src, dst, sendChannel)
+func updateCardConfig(card byte, data *DaqData, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
+	sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
 	sendFPGAFil(src, dst, sendChannel)
 }
 
@@ -171,12 +178,12 @@ func setVCXO(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame
 
 func setDAC1Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	createDefaultSlowControlConfiguration()["dac1_code"] = 768
-	sendSlowControlConfiguration(src, dst, sendChannel)
+	//sendSlowControlConfiguration(src, dst, sendChannel)
 }
 
 func setDAC2Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	createDefaultSlowControlConfiguration()["dac2_code"] = 768
-	sendSlowControlConfiguration(src, dst, sendChannel)
+	//sendSlowControlConfiguration(src, dst, sendChannel)
 }
 
 func setDACThr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
