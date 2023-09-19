@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateCardConfig, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateGlobalConfig, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import { EventsOn } from '../../wailsjs/runtime/runtime'
 
 
@@ -34,12 +34,6 @@ function readData() {
   });
 }
 
-function updateConfigFromUI() {
-  UpdateCardConfig(selectedCard.value, slowControl.value, probe.value).then(() => {
-    console.log("test param")
-  });
-}
-
 function startRun() {
   StartRun().then(() => {
     console.log("start run")
@@ -61,6 +55,12 @@ function hvOn() {
 function hvOff() {
   HVOff().then(() => {
     console.log("hv off")
+  });
+}
+
+function updateGlobalConfig() {
+  UpdateGlobalConfig(slowControl.value, probe.value).then(() => {
+    console.log("update all configs")
   });
 }
 
@@ -88,7 +88,7 @@ onMounted(() => {
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
     <button @click="readData()" class="btn btn-primary">Read data</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
-    <button @click="updateConfigFromUI()" class="btn btn-primary">Test UI</button>
+    <button @click="updateGlobalConfig()" class="btn btn-primary">Send configuration to all cards</button>
 
     <h1>Rate {{ card }}: {{ rate }}</h1>
 

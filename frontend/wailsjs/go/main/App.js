@@ -41,3 +41,7 @@ export function StopRun() {
 export function UpdateCardConfig(arg1, arg2, arg3) {
   return window['go']['main']['App']['UpdateCardConfig'](arg1, arg2, arg3);
 }
+
+export function UpdateGlobalConfig(arg1, arg2) {
+  return window['go']['main']['App']['UpdateGlobalConfig'](arg1, arg2);
+}

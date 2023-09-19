@@ -6,6 +6,7 @@ import GainBias from '../components/GainBias.vue';
 import MenuBar from '../components/MenuBar.vue';
 import SetDAC from '@/components/SetDAC.vue';
 import SetVCXO from '@/components/SetVCXO.vue';
+import SendCardConfig from '@/components/SendCardConfig.vue';
 </script>
 
 <template>
@@ -24,7 +25,8 @@ import SetVCXO from '@/components/SetVCXO.vue';
           <SetDAC />
           <SetVCXO />
         </div>
-          <GainBias />
+        <GainBias />
+        <SendCardConfig />
       </div>
     </div>
   </main>

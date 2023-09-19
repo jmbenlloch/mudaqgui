@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/mdlayher/packet"
+	"golang.org/x/exp/maps"
 )
 
 // App struct
@@ -108,4 +109,14 @@ func (a *App) UpdateCardConfig(card int, slowControl map[string]any, probe map[s
 	src := a.iface.HardwareAddr
 	dst := a.data.devices[cardID]
 	updateCardConfig(cardID, &a.data, src, *dst, a.sendFrameChannel)
+}
+
+func (a *App) UpdateGlobalConfig(slowControl map[byte]map[string]any, probe map[byte]map[string]any) {
+	fmt.Println(slowControl)
+	fmt.Println(probe)
+
+	cards := maps.Keys(slowControl)
+	for _, card := range cards {
+		a.UpdateCardConfig(int(card), slowControl[card], probe[card])
+	}
 }
