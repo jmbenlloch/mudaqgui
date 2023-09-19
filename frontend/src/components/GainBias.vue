@@ -7,7 +7,7 @@ import { storeToRefs } from 'pinia'
 const nChannels = ref(32)
 
 const store = useConfigStore()
-const { slowControl } = storeToRefs(store)
+const { slowControl, disableForms } = storeToRefs(store)
 
 function updateGain(value: number, index: number) {
   slowControl.value.channel_preamp_HG[index] = value
@@ -26,9 +26,9 @@ function updateBias(value: number, index: number) {
         <label class="label cursor-pointer">
           <span class="label-text">Ch. {{ n }}</span>
           <NumericInput :value="slowControl.channel_preamp_HG[index]" @update-value="updateGain($event, index)"
-            class="mx-1" :min="0" :max="63" />
+            class="mx-1" :min="0" :max="63" :disabled="disableForms"/>
           <NumericInput :value="slowControl.input_dac[index]" @update-value="updateBias($event, index)" class="mx-1"
-            :min="0" :max="254" />
+            :min="0" :max="254" :disabled="disableForms"/>
         </label>
       </div>
     </div>

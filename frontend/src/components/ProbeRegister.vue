@@ -4,7 +4,7 @@ import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 
 const store = useConfigStore()
-const { probe } = storeToRefs(store)
+const { probe, disableForms } = storeToRefs(store)
 
 const probeRegister = ref(-1)
 const nChannels = ref(32)
@@ -26,7 +26,7 @@ watch(probeRegister, (value) => {
         <label class="label">
           <span class="label-text">Select channel</span>
         </label>
-        <select v-model="probeRegister" class="select select-bordered">
+        <select v-model="probeRegister" class="select select-bordered" :disabled="disableForms">
           <option :value="-1">None</option>
           <option v-for="n in nChannels" :value="n - 1">Channel {{ n }}</option>
         </select>

@@ -1,8 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
-import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun, DevicesMacs } from "../../wailsjs/go/main/App";
+import { useConfigStore } from '../stores/configuration'
+import { storeToRefs } from 'pinia'
+import { ScanDevices, SetVCXO, SetDACThr, HVOn, HVOff, ReadData, UpdateConfig, PrintT0, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import { EventsOn } from '../../wailsjs/runtime/runtime'
+
+
+const store = useConfigStore()
+const { cards, selectedCard } = storeToRefs(store)
 
 function scanDevices() {
   ScanDevices().then(() => {
@@ -18,12 +24,6 @@ function getRate() {
 
 function setDACThr() {
   SetDACThr().then(() => {
-    console.log("get rate")
-  });
-}
-
-function setVCXO() {
-  SetVCXO().then(() => {
     console.log("get rate")
   });
 }
@@ -70,22 +70,8 @@ function hvOff() {
   });
 }
 
-const macs: Ref<Array<String>>  = ref([])
-
-function showDevices() {
-  DevicesMacs().then((result) => {
-    macs.value = []
-    for (let mac of result){
-      macs.value.push(mac)
-    }
-  });
-}
-
 const rate = ref(0)
 const card = ref(0)
-
-const configSC = ref({})
-const configProbe = ref({})
 
 onMounted(() => {
   EventsOn("rate", (data) => {
@@ -93,7 +79,6 @@ onMounted(() => {
     rate.value = data.rate
     card.value = data.card
   })
-
 })
 </script>
 
@@ -102,7 +87,6 @@ onMounted(() => {
     <h2 class="font-bold text-xl">Menu</h2>
 
     <button @click="scanDevices()" class="btn btn-primary">Scan network</button>
-    <button @click="showDevices()" class="btn btn-primary">Show results</button>
     <button @click="getRate()" class="btn btn-primary">Get Rate</button>
     <button @click="startRun()" class="btn btn-primary">Start run</button>
     <button @click="stopRun()" class="btn btn-primary">Stop run</button>
@@ -111,7 +95,6 @@ onMounted(() => {
     <button @click="readData()" class="btn btn-primary">Read data</button>
     <button @click="printT0()" class="btn btn-primary">T0</button>
     <button @click="updateConfig()" class="btn btn-primary">config</button>
-    <button @click="setVCXO()" class="btn btn-primary">VCXO</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
 
     <h1>Rate {{ card }}: {{ rate }}</h1>
@@ -119,15 +102,15 @@ onMounted(() => {
     <div>
       <h3>Devices found</h3>
       <ul>
-        <li v-for="mac in macs">{{ mac }}</li>
+        <li v-for="card in cards">{{ card }}</li>
       </ul>
 
       <div class="form-control max-w-xs">
         <label class="label">
           <span class="label-text">Select card</span>
         </label>
-        <select class="select select-bordered">
-          <option v-for="mac in macs" :value="mac">Card {{ mac }}</option>
+        <select v-model="selectedCard" class="select select-bordered">
+          <option v-for="card in cards" :value="card">Card {{ card }}</option>
         </select>
       </div>
 

@@ -5,7 +5,7 @@ import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 
 const store = useConfigStore()
-const { slowControl } = storeToRefs(store)
+const { slowControl, disableForms } = storeToRefs(store)
 
 function updateDAC(value: number){
   slowControl.value.dac1_code = value
@@ -22,7 +22,7 @@ function updateDAC(value: number){
           <span class="label-text">DAC Threshold</span>
         </label>
         <NumericInput :value="slowControl.dac1_code" @update-value="updateDAC" class="mx-1"
-          :min="0" :max="1024" />
+          :disabled="disableForms" :min="0" :max="1024" />
       </div>
     </div>
   </div>

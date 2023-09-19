@@ -5,7 +5,7 @@ import ProbeRegister from '../components/ProbeRegister.vue'
 import GainBias from '../components/GainBias.vue';
 import MenuBar from '../components/MenuBar.vue';
 import SetDAC from '@/components/SetDAC.vue';
-import SetVCXO from '@/components/SetDAC.vue';
+import SetVCXO from '@/components/SetVCXO.vue';
 </script>
 
 <template>

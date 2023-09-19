@@ -7,7 +7,7 @@ const triggerEnable = ref([])
 const nChannels = ref(32)
 
 const store = useConfigStore()
-const { slowControl } = storeToRefs(store)
+const { slowControl, disableForms } = storeToRefs(store)
 
 watch(triggerEnable, (value) => {
   const array: Array<number> = Array(nChannels.value).fill(0)
@@ -26,7 +26,7 @@ watch(triggerEnable, (value) => {
     <div class="border border-primary w-fit grid grid-cols-4 gap-2">
       <div class="form-control" v-for="n in nChannels">
         <label class="label cursor-pointer">
-          <input v-model="triggerEnable" type="checkbox" class="checkbox" :value="n - 1" />
+          <input v-model="triggerEnable" type="checkbox" class="checkbox" :value="n - 1" :disabled="disableForms"/>
           <span class="label-text">Ch. {{ n }}</span>
         </label>
       </div>
@@ -34,7 +34,7 @@ watch(triggerEnable, (value) => {
 
     <div class="form-control">
       <label class="label cursor-pointer">
-        <input v-model="slowControl.enable_or32" type="checkbox" class="checkbox" :true-value="1" :false-value="0" />
+        <input v-model="slowControl.enable_or32" type="checkbox" class="checkbox" :true-value="1" :false-value="0" :disabled="disableForms"/>
         <span class="label-text text-lg">Trigger OR 32</span>
       </label>
     </div>

@@ -17,7 +17,7 @@ function disableAll(){
 }
 
 const store = useConfigStore()
-const { slowControl } = storeToRefs(store)
+const { slowControl, selectedCard, disableForms } = storeToRefs(store)
 
 watch(ampEnable, (value) => {
   console.log(value)
@@ -37,12 +37,12 @@ watch(ampEnable, (value) => {
     <div class="border border-primary w-fit grid grid-cols-4 gap-2">
       <div class="form-control" v-for="n in nChannels">
         <label class="label cursor-pointer">
-          <input v-model="ampEnable" type="checkbox" class="checkbox" :value="n-1"/>
+          <input v-model="ampEnable" type="checkbox" class="checkbox" :value="n-1" :disabled="disableForms"/>
           <span class="label-text">Ch. {{ n-1 }}</span> 
         </label>
       </div>
     </div>
-    <button @click="enableAll" class="btn btn-info m-2">Enable all</button>
-    <button @click="disableAll" class="btn btn-warning m- m-22">Disable all</button>
+    <button @click="enableAll" :disabled="disableForms" class="btn btn-info m-2">Enable all</button>
+    <button @click="disableAll" :disabled="disableForms" class="btn btn-warning m- m-22">Disable all</button>
   </div>
 </template>

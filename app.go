@@ -54,14 +54,6 @@ func (a *App) ScanDevices() {
 	scanDevices(a.iface.HardwareAddr, a.sendFrameChannel)
 }
 
-func (a *App) DevicesMacs() []string {
-	macAddrs := make([]string, 0, 256)
-	for _, mac := range a.data.devices {
-		macAddrs = append(macAddrs, mac.String())
-	}
-	return macAddrs
-}
-
 func (a *App) GetRate() {
 	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
 	getRate(a.iface.HardwareAddr, dst, a.sendFrameChannel)

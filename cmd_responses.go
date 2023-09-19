@@ -68,6 +68,14 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	data.slowControlConfiguration[frame.Source[5]] = createDefaultSlowControlConfiguration()
 	data.probeConfiguration[frame.Source[5]] = createDefaultProbeRegisterConfiguration()
 
+	cards := make([]int, 0, len(data.devices))
+	for key, _ := range data.devices {
+		cards = append(cards, int(key))
+	}
+	// For some reason these values are not properly passed to JS
+	//runtime.EventsEmit(ctx, "cards", maps.Keys(data.devices))
+	runtime.EventsEmit(ctx, "cards", cards)
+
 	sendConfigToUI(data, ctx)
 }
 

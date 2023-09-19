@@ -31,6 +31,9 @@ export const useConfigStore = defineStore('config', () => {
     peakSensingHG: [0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0],
   })
 
+  const cards : Ref<Array<Number>> = ref([])
+  const selectedCard : Ref<number> = ref(-1)
+  const disableForms = computed(() => selectedCard.value < 0)
 
   EventsOn("configSlowControl", (data) => {
     console.log("SC", data)
@@ -42,5 +45,10 @@ export const useConfigStore = defineStore('config', () => {
     probe.value = data
   })
 
-  return { slowControl, probe }
+  EventsOn("cards", (data: Array<Number>) => {
+    console.log("Cards", data)
+    cards.value = data
+  })
+
+  return { slowControl, probe, cards, selectedCard, disableForms }
 })
