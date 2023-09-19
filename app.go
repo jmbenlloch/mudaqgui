@@ -54,7 +54,7 @@ func (a *App) ScanDevices() {
 }
 
 func (a *App) GetRate() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+	dst := getMacAddressDevice(0xff)
 	getRate(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
