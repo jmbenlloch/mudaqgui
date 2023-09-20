@@ -99,14 +99,14 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 
 		data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
 
-		log.Printf("[Event lost buffer] %d", evt.LostBuffer)
-		log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
-		log.Printf("[t0] %d", evt.T0)
+		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
+		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
+		//log.Printf("[t0] %d", evt.T0)
 		log.Printf("[t1] %d", evt.T1)
 
-		for i := 0; i < 32; i++ {
-			log.Printf("charge[%d]: %d", i, evt.Charges[i])
-		}
+		//for i := 0; i < 32; i++ {
+		//log.Printf("charge[%d]: %d", i, evt.Charges[i])
+		//}
 	}
 
 	runtime.EventsEmit(ctx, "events", data.events)
