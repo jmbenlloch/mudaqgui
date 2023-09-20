@@ -14,25 +14,34 @@ type EventData = {
   }]
 }
 
+type Point = {
+  x: number,
+  y: number,
+}
+
 export const useEventStore = defineStore('events', () => {
   const events: Ref<EventData> = ref({})
 
   const t0 = computed(() => {
-    let t0s: {[index: string] : Array<number>} = {}
+    let t0s: {[index: string] : Array<Point>} = {}
     Object.entries(events.value).forEach(entry => {
       const [card, events] = entry;
       console.log("data: ", card, events);
-      t0s[card] = events.map(o => o.T0)
+      t0s[card] = events.map((o, index) => {
+        return {x: index, y: o.T0}
+      })
     });
     return t0s
   })
 
   const t1 = computed(() => {
-    let t1s: {[index: string] : Array<number>} = {}
+    let t1s: {[index: string] : Array<Point>} = {}
     Object.entries(events.value).forEach(entry => {
       const [card, events] = entry;
       console.log("data: ", card, events);
-      t1s[card] = events.map(o => o.T1)
+      t1s[card] = events.map((o, index) => {
+        return { x: index, y: o.T1}
+      })
     });
     return t1s
   })
