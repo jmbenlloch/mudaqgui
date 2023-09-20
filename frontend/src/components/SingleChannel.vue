@@ -68,6 +68,7 @@ watch(channel, (value) => {
         <option v-for="n in nChannels" :value="n - 1">Channel {{ n }}</option>
       </select>
     </div>
+    <!-- @vue-ignore -->
     <Bar :options="chartOptions" :data="chartData" width="1200" />
   </div>
 </template>

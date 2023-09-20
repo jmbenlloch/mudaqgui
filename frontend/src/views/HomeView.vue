@@ -2,7 +2,8 @@
 import MenuBar from '../components/MenuBar.vue';
 import ConfigurationView from './ConfigurationView.vue';
 import EventsView from './EventsView.vue';
-import ChargesView from './ChargesView.vue';
+import ChannelView from './ChannelView.vue';
+import AllChannelsView from './AllChannelsView.vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 </script>
 
@@ -20,7 +21,8 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
           <TabList class="tabs">
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Configuration</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Plots</Tab>
-            <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Charges</Tab>
+            <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Single channel</Tab>
+            <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">All channels</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -30,7 +32,10 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
               <EventsView />
             </TabPanel>
             <TabPanel>
-              <ChargesView />
+              <ChannelView />
+            </TabPanel>
+            <TabPanel>
+              <AllChannelsView />
             </TabPanel>
           </TabPanels>
         </TabGroup>

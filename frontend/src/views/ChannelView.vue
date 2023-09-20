@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Charges from '@/components/Charges.vue';
+import SingleChannel from '@/components/SingleChannel.vue';
 </script>
 
 <template>
   <div class="flex gap-3">
-    <Charges />
+    <SingleChannel/>
   </div>
 </template>
