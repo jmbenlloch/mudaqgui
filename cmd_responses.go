@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math"
 	"net"
@@ -16,6 +17,7 @@ type DaqData struct {
 	slowControlConfiguration map[byte]map[string]any
 	probeConfiguration       map[byte]map[string]any
 	events                   map[byte][]EventData
+	charges                  map[byte]ChargeHistogram
 }
 
 type EventData struct {
@@ -26,6 +28,10 @@ type EventData struct {
 	LostBuffer uint16     `json="lostBuffer"`
 	LostFPGA   uint16     `json="lostFGPA"`
 	Charges    [32]uint16 `json="charges"`
+}
+
+type ChargeHistogram struct {
+	Charges [32][]int32 `json="charges"`
 }
 
 func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
@@ -72,6 +78,16 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 		data.events[frame.Source[5]] = make([]EventData, 0, 10000)
 	}
 
+	// Add new charge histogram if this card did not exist
+	if _, exists := data.charges[frame.Source[5]]; !exists {
+		chargeHistograms := ChargeHistogram{}
+		for i := 0; i < 32; i++ {
+			chargeHistograms.Charges[i] = make([]int32, 1024)
+		}
+		data.charges[frame.Source[5]] = chargeHistograms
+		fmt.Println(data.charges[frame.Source[5]])
+	}
+
 	cards := make([]int, 0, len(data.devices))
 	for key, _ := range data.devices {
 		cards = append(cards, int(key))
@@ -104,12 +120,16 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		//log.Printf("[t0] %d", evt.T0)
 		//log.Printf("[t1] %d", evt.T1)
 
-		//for i := 0; i < 32; i++ {
-		//log.Printf("charge[%d]: %d", i, evt.Charges[i])
-		//}
+		for i := 0; i < 32; i++ {
+			log.Printf("charge[%d]: %d", i, evt.Charges[i])
+			chargesHistograms := data.charges[frame.Source[5]]
+			count := chargesHistograms.Charges[i][evt.Charges[i]]
+			chargesHistograms.Charges[i][evt.Charges[i]] = count + 1
+		}
 	}
 
 	runtime.EventsEmit(ctx, "events", data.events)
+	runtime.EventsEmit(ctx, "charges", data.charges)
 
 	//s := hex.EncodeToString(frame.Payload)
 	//fmt.Println(s)
