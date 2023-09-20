@@ -6,18 +6,28 @@ import { Bar, Line } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, PointElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
 import { range } from 'lodash'
 
+import { useEventStore } from '../stores/events'
+import { useConfigStore } from '../stores/configuration'
+import { storeToRefs } from 'pinia'
+
+const eventStore = useEventStore()
+const configStore = useConfigStore()
+const { chargesRebin } = storeToRefs(eventStore)
+const { selectedCard } = storeToRefs(configStore)
+
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
 const props = defineProps({
-  data: { required: true, type: Array<number> },
+  channel: { required: true, type: Number },
 })
 
-function createDataObject(data: Array<number>): ChartData {
+function createDataObject(): ChartData {
   let result: ChartData = {
-//    labels: range(0, 1024),
+    //    labels: range(0, 1024),
     labels: range(0, 128),
     datasets: [{
-      data: props.data,
+      data: chargesRebin.value[selectedCard.value].Charges[props.channel],
       backgroundColor: '#f87979',
     }]
   }
@@ -25,7 +35,7 @@ function createDataObject(data: Array<number>): ChartData {
 }
 
 // @ts-ignore
-const chartData: Ref<ChartData> = ref(createDataObject(props.data))
+const chartData: Ref<ChartData> = ref(createDataObject())
 
 // @ts-ignore
 const chartOptions: Ref<ChartOptions<'bar'>> = ref({
@@ -35,19 +45,20 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
   responsive: false,
 })
 
-function updatePlot(data: Array<number>) {
-  chartData.value = createDataObject(data)
+function updatePlot(){
+  chartData.value = createDataObject()
 }
 
-//watch(props.data, (values) => {
-//  updatePlot(props.data)
-//})
+watch(chargesRebin, (values) => {
+  console.log("prop updated!")
+  updatePlot()
+})
 </script>
 
 <template>
   <div class="flex flex-col">
     <!-- @vue-ignore -->
-    <Bar :options="chartOptions" :data="chartData" class="w-full"/>
+    <Bar :options="chartOptions" :data="chartData" class="w-full h-36" />
   </div>
 </template>
 

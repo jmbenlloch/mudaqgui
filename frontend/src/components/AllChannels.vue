@@ -19,8 +19,8 @@ const nChannels: Ref<number> = ref(32)
 <template>
   <div class="flex flex-col">
     <div class="grid grid-cols-8">
-      <div v-for="ch in 32">
-        <ChargeHistogram :data="chargesRebin[selectedCard].Charges[ch-1]" />
+     <div v-for="ch in 32">
+        <ChargeHistogram :channel="ch-1" />
       </div>
     </div>
   </div>
