@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref, shallowRef, watch } from 'vue'
-import { Bar } from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+import { useEventStore } from '../stores/events'
+import { storeToRefs } from 'pinia'
+
+const store = useEventStore()
+const { events, t0 } = storeToRefs(store)
+
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -12,6 +19,7 @@ function addData() {
   }
   console.log(chartData.value.labels)
   console.log(chartData.value.datasets)
+  console.log(t0.value)
 }
 
 const chartData = ref({

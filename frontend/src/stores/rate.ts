@@ -13,7 +13,7 @@ export const useRateStore = defineStore('rate', () => {
   const totalRate = computed(() => sum(Object.values(rates.value)))
 
   EventsOn("rate", (data) => {
-    console.log("event rate", data)
+    //console.log("event rate", data)
     rates.value[data.card] = data.rate
     //console.log(rates.value)
   })
