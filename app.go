@@ -36,6 +36,7 @@ func (a *App) startup(ctx context.Context) {
 		probeConfiguration:       make(map[byte]map[string]any),
 		events:                   make(map[byte][]EventData),
 		charges:                  make(map[byte]ChargeHistogram),
+		chargesRebinned:          make(map[byte]ChargeHistogram),
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)

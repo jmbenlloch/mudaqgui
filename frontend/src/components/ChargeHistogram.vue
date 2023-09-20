@@ -14,7 +14,8 @@ const props = defineProps({
 
 function createDataObject(data: Array<number>): ChartData {
   let result: ChartData = {
-    labels: range(0, 1024),
+//    labels: range(0, 1024),
+    labels: range(0, 128),
     datasets: [{
       data: props.data,
       backgroundColor: '#f87979',
@@ -31,22 +32,22 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
   // Turn off animations and data parsing for performance
   animation: false,
   //parsing: false,
-  responsive: true
+  responsive: false,
 })
 
 function updatePlot(data: Array<number>) {
   chartData.value = createDataObject(data)
 }
 
-watch(props.data, (values) => {
-  updatePlot(props.data)
-})
+//watch(props.data, (values) => {
+//  updatePlot(props.data)
+//})
 </script>
 
 <template>
   <div class="flex flex-col">
     <!-- @vue-ignore -->
-    <Bar :options="chartOptions" :data="chartData" width="1200" />
+    <Bar :options="chartOptions" :data="chartData" class="w-full"/>
   </div>
 </template>
 

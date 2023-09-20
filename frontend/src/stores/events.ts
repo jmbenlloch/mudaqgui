@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { EventsOn } from '../../wailsjs/runtime/runtime'
-import { sum } from 'lodash'
+import { fill } from 'lodash'
 
 type EventData = {
   [index: number]: [{
@@ -62,12 +62,35 @@ export const useEventStore = defineStore('events', () => {
     charges.value = data
   })
 
+  EventsOn("chargesRebin", (data) => {
+    console.log("chargesRebin", data)
+    chargesRebin.value = data
+  })
 
   const charges: Ref<ChargeHistogram> = ref({
     1024: {
-      Charges: []
-    }
+      Charges: Array(32).fill(Array(1024).fill(0)),
+    },
+
+    85: {
+      Charges: Array(32).fill(Array(1024).fill(0)),
+    },
+    69: {
+      Charges: Array(32).fill(Array(1024).fill(0)),
+    },
   })
 
-  return { events, t0, t1, charges }
+  const chargesRebin: Ref<ChargeHistogram> = ref({
+    1024: {
+      Charges: Array(32).fill(Array(128).fill(0)),
+    },
+    85: {
+      Charges: Array(32).fill(Array(128).fill(0)),
+    },
+    69: {
+      Charges: Array(32).fill(Array(128).fill(0)),
+    },
+  })
+
+  return { events, t0, t1, charges, chargesRebin }
 })

@@ -18,6 +18,7 @@ type DaqData struct {
 	probeConfiguration       map[byte]map[string]any
 	events                   map[byte][]EventData
 	charges                  map[byte]ChargeHistogram
+	chargesRebinned          map[byte]ChargeHistogram
 }
 
 type EventData struct {
@@ -85,7 +86,13 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 			chargeHistograms.Charges[i] = make([]int32, 1024)
 		}
 		data.charges[frame.Source[5]] = chargeHistograms
-		fmt.Println(data.charges[frame.Source[5]])
+
+		// Rebinned
+		chargeHistogramsRebin := ChargeHistogram{}
+		for i := 0; i < 32; i++ {
+			chargeHistogramsRebin.Charges[i] = make([]int32, 128)
+		}
+		data.chargesRebinned[frame.Source[5]] = chargeHistogramsRebin
 	}
 
 	cards := make([]int, 0, len(data.devices))
@@ -125,11 +132,19 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 			chargesHistograms := data.charges[frame.Source[5]]
 			count := chargesHistograms.Charges[i][evt.Charges[i]]
 			chargesHistograms.Charges[i][evt.Charges[i]] = count + 1
+
+			// Rebin
+			chargesHistograms = data.chargesRebinned[frame.Source[5]]
+			index := evt.Charges[i] / 4
+			fmt.Println(index, evt.Charges[i])
+			count = chargesHistograms.Charges[i][index]
+			chargesHistograms.Charges[i][index] = count + 1
 		}
 	}
 
 	runtime.EventsEmit(ctx, "events", data.events)
 	runtime.EventsEmit(ctx, "charges", data.charges)
+	runtime.EventsEmit(ctx, "chargesRebin", data.chargesRebinned)
 
 	//s := hex.EncodeToString(frame.Payload)
 	//fmt.Println(s)

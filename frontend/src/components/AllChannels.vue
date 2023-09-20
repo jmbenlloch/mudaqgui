@@ -10,8 +10,8 @@ import { storeToRefs } from 'pinia'
 
 const eventStore = useEventStore()
 const configStore = useConfigStore()
-const { charges } = storeToRefs(eventStore)
-const { selectedCard, disableForms } = storeToRefs(configStore)
+const { chargesRebin } = storeToRefs(eventStore)
+const { selectedCard } = storeToRefs(configStore)
 
 const nChannels: Ref<number> = ref(32)
 </script>
@@ -19,29 +19,10 @@ const nChannels: Ref<number> = ref(32)
 <template>
   <div class="flex flex-col">
     <div class="grid grid-cols-8">
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
-      <p>Test</p>
+      <div v-for="ch in 32">
+        <ChargeHistogram :data="chargesRebin[selectedCard].Charges[ch-1]" />
+      </div>
     </div>
-    <ChargeHistogram :data="range(0, 1024)" />
   </div>
 </template>
 
