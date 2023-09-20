@@ -31,7 +31,7 @@ type EventData struct {
 func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 	for {
 		frame := <-recvChannel
-		log.Printf("length %d, %s", len(frame.Payload), frame.Command)
+		//log.Printf("length %d, %s", len(frame.Payload), frame.Command)
 		switch frame.Command {
 		case FEB_OK:
 			storeDeviceMac(frame, data, ctx)
@@ -42,7 +42,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 			log.Println("data cdr")
 			decodeData(frame, data, ctx)
 		case FEB_EOF_CDR:
-			log.Println("End of data")
+			//log.Println("End of data")
 		case FEB_OK_SCR:
 			log.Println("CITIROC slow control OK")
 		case FEB_OK_PMR:
@@ -102,7 +102,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
 		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
 		//log.Printf("[t0] %d", evt.T0)
-		log.Printf("[t1] %d", evt.T1)
+		//log.Printf("[t1] %d", evt.T1)
 
 		//for i := 0; i < 32; i++ {
 		//log.Printf("charge[%d]: %d", i, evt.Charges[i])
@@ -140,8 +140,8 @@ func decodeEvent(data []byte) *EventData {
 	var t0LSB uint32 = (t0 & 0x00000003)
 	var t1LSB uint32 = (t1 & 0x00000003)
 
-	t0 = (t0 & 0x3FFFFFF) >> 2
-	t1 = (t1 & 0x3FFFFFF) >> 2
+	t0 = (t0 & 0x3FFFFFFF) >> 2
+	t1 = (t1 & 0x3FFFFFFF) >> 2
 
 	t0 = grayToBin(t0)
 	t1 = grayToBin(t1)
