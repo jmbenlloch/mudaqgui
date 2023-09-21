@@ -14,6 +14,10 @@ export function HVOn() {
   return window['go']['main']['App']['HVOn']();
 }
 
+export function LoadConfiguration(arg1) {
+  return window['go']['main']['App']['LoadConfiguration'](arg1);
+}
+
 export function ReadData() {
   return window['go']['main']['App']['ReadData']();
 }

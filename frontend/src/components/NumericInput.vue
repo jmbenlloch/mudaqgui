@@ -29,6 +29,10 @@ function decrement() {
   }
 }
 
+watch(props, () => {
+  value.value = props.value
+})
+
 watch(value, (newValue) => {
   if (value.value > props.max) {
     value.value = props.max

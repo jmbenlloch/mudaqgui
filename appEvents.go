@@ -11,6 +11,7 @@ import (
 )
 
 func sendConfigToUI(data *DaqData, ctx context.Context) {
+	fmt.Println("event emitted1")
 	slowControl := make(map[byte]map[string]any)
 	probe := make(map[byte]map[string]any)
 
@@ -36,6 +37,7 @@ func sendConfigToUI(data *DaqData, ctx context.Context) {
 
 	runtime.EventsEmit(ctx, "configSlowControl", slowControl)
 	runtime.EventsEmit(ctx, "configProbe", probe)
+	fmt.Println("event emitted")
 }
 
 func readConfigFromUI(data *DaqData, ctx context.Context) {
@@ -65,4 +67,19 @@ func saveConfigYaml(data *DaqData, file string) {
 	}
 	fmt.Println("data written")
 	_ = dataTest
+}
+
+func readConfigYaml(data *DaqData, file string) {
+	yfile, err := os.ReadFile(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+	dataYaml := make(map[byte]map[string]map[string]any)
+	err2 := yaml.Unmarshal(yfile, &dataYaml)
+	_ = err2
+
+	for card, values := range dataYaml {
+		data.probeConfiguration[card] = values["probeConfiguration"]
+		data.slowControlConfiguration[card] = values["slowControlConfiguration"]
+	}
 }

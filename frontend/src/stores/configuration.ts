@@ -61,7 +61,7 @@ export const useConfigStore = defineStore('config', () => {
   const disableForms = computed(() => selectedCard.value == nonValidCardID)
 
   EventsOn("configSlowControl", (data) => {
-    //console.log("SC", data)
+    console.log("SC", data)
     slowControl.value = data
     if (selectedCard.value == nonValidCardID) {
       selectedCard.value = parseInt(Object.keys(slowControl.value)[0])
@@ -69,7 +69,7 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   EventsOn("configProbe", (data) => {
-    //console.log("Probe", data)
+    console.log("Probe", data)
     probe.value = data
     if (selectedCard.value == nonValidCardID) {
       selectedCard.value = parseInt(Object.keys(probe.value)[0])

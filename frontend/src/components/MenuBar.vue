@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateGlobalConfig, SelectConfigFile, SaveConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateGlobalConfig, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import Rate from './Rate.vue';
 
 
@@ -26,6 +26,12 @@ function selectConfigurationFile() {
 
 function saveConfiguration() {
   SaveConfiguration(configFile.value).then(() => {
+    console.log("saved")
+  });
+}
+
+function loadConfiguration() {
+  LoadConfiguration(configFile.value).then(() => {
     console.log("saved")
   });
 }
@@ -124,6 +130,8 @@ function updateGlobalConfig() {
           class="input input-bordered block pl-24 w-full max-w-xs truncate ..." />
       </div>
       <button @click="saveConfiguration" class="btn btn-primary mt-2">Save configuration</button>
+
+      <button @click="loadConfiguration" class="btn btn-primary mt-2">Load configuration</button>
     </div>
   </div>
 </template>

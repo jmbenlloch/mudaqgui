@@ -7,6 +7,8 @@ export function HVOff():Promise<void>;
 
 export function HVOn():Promise<void>;
 
+export function LoadConfiguration(arg1:string):Promise<void>;
+
 export function ReadData():Promise<void>;
 
 export function SaveConfiguration(arg1:string):Promise<void>;

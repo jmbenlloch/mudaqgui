@@ -145,3 +145,10 @@ func (a *App) SelectConfigFile() string {
 func (a *App) SaveConfiguration(file string) {
 	saveConfigYaml(&a.data, file)
 }
+
+func (a *App) LoadConfiguration(file string) {
+	readConfigYaml(&a.data, file)
+	fmt.Println("file read")
+	sendConfigToUI(&a.data, a.ctx)
+	fmt.Println("event sent")
+}
