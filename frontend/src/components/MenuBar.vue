@@ -3,8 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateGlobalConfig, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
-import { EventsOn } from '../../wailsjs/runtime/runtime'
+import { ScanDevices, UpdateGlobalConfig, SelectConfigFile, SaveConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import Rate from './Rate.vue';
 
 
@@ -14,6 +13,20 @@ const { slowControl, probe, cards, selectedCard, disableForms } = storeToRefs(st
 function scanDevices() {
   ScanDevices().then(() => {
     console.log("scan")
+  });
+}
+
+const configFile: Ref<string> = ref("")
+
+function selectConfigurationFile() {
+  SelectConfigFile().then((file: string) => {
+    configFile.value = file
+  });
+}
+
+function saveConfiguration() {
+  SaveConfiguration(configFile.value).then(() => {
+    console.log("saved")
   });
 }
 
@@ -96,8 +109,21 @@ function updateGlobalConfig() {
           <option v-for="card in cards" :value="card">Card {{ card }}</option>
         </select>
       </div>
-
     </div>
 
+    <div class="form-control max-w-xs">
+      <label class="label">
+        <span class="text-lg">Save configuration</span>
+      </label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center px-3 pointer-events-none
+        bg-gray-800 border border-r-0 rounded-l-lg">
+          <span class="text-gray-100">BROWSE</span>
+        </div>
+        <input @click="selectConfigurationFile" :value="`  ... ${configFile.slice(-20)}`" placeholder="Select file..." type="text" readonly
+          class="input input-bordered block pl-24 w-full max-w-xs truncate ..." />
+      </div>
+      <button @click="saveConfiguration" class="btn btn-primary mt-2">Save configuration</button>
+    </div>
   </div>
 </template>

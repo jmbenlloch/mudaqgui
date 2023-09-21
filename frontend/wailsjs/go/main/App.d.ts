@@ -9,7 +9,11 @@ export function HVOn():Promise<void>;
 
 export function ReadData():Promise<void>;
 
+export function SaveConfiguration(arg1:string):Promise<void>;
+
 export function ScanDevices():Promise<void>;
+
+export function SelectConfigFile():Promise<string>;
 
 export function SetDACThr():Promise<void>;
 

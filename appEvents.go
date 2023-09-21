@@ -2,8 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"os"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"gopkg.in/yaml.v3"
 )
 
 func sendConfigToUI(data *DaqData, ctx context.Context) {
@@ -36,4 +40,29 @@ func sendConfigToUI(data *DaqData, ctx context.Context) {
 
 func readConfigFromUI(data *DaqData, ctx context.Context) {
 
+}
+
+func saveConfigYaml(data *DaqData, file string) {
+	configToSave := make(map[byte]map[string]any)
+
+	for card, values := range data.probeConfiguration {
+		configToSave[card] = make(map[string]any)
+		configToSave[card]["probeConfiguration"] = values
+	}
+
+	for card, values := range data.slowControlConfiguration {
+		configToSave[card]["slowControlConfiguration"] = values
+	}
+
+	dataTest, err := yaml.Marshal(configToSave)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err2 := os.WriteFile(file, dataTest, 0644)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	fmt.Println("data written")
+	_ = dataTest
 }

@@ -18,8 +18,16 @@ export function ReadData() {
   return window['go']['main']['App']['ReadData']();
 }
 
+export function SaveConfiguration(arg1) {
+  return window['go']['main']['App']['SaveConfiguration'](arg1);
+}
+
 export function ScanDevices() {
   return window['go']['main']['App']['ScanDevices']();
+}
+
+export function SelectConfigFile() {
+  return window['go']['main']['App']['SelectConfigFile']();
 }
 
 export function SetDACThr() {

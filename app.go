@@ -6,6 +6,7 @@ import (
 	"net"
 
 	"github.com/mdlayher/packet"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 	"golang.org/x/exp/maps"
 )
 
@@ -128,4 +129,19 @@ func (a *App) UpdateGlobalConfig(slowControl map[byte]map[string]any, probe map[
 	for _, card := range cards {
 		a.UpdateCardConfig(int(card), slowControl[card], probe[card])
 	}
+}
+
+func (a *App) SelectConfigFile() string {
+	options := runtime.SaveDialogOptions{
+		DefaultDirectory:           "/home/jmbenlloch/go/myproject",
+		DefaultFilename:            "config.yaml",
+		Title:                      "Select file to save configuration",
+		TreatPackagesAsDirectories: true,
+	}
+	file, _ := runtime.SaveFileDialog(a.ctx, options)
+	return file
+}
+
+func (a *App) SaveConfiguration(file string) {
+	saveConfigYaml(&a.data, file)
 }
