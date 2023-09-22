@@ -63,13 +63,13 @@ func (a *App) StopRun() {
 	a.dataTaking = false
 }
 
-func (a *App) HVOn() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+func (a *App) HVOn(cardID byte) {
+	dst := getMacAddressDevice(cardID)
 	hvOn(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) HVOff() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
+func (a *App) HVOff(cardID byte) {
+	dst := getMacAddressDevice(cardID)
 	hvOff(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 

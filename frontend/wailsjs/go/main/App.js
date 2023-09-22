@@ -6,24 +6,16 @@ export function GetNetworkInterfaces() {
   return window['go']['main']['App']['GetNetworkInterfaces']();
 }
 
-export function GetRate() {
-  return window['go']['main']['App']['GetRate']();
+export function HVOff(arg1) {
+  return window['go']['main']['App']['HVOff'](arg1);
 }
 
-export function HVOff() {
-  return window['go']['main']['App']['HVOff']();
-}
-
-export function HVOn() {
-  return window['go']['main']['App']['HVOn']();
+export function HVOn(arg1) {
+  return window['go']['main']['App']['HVOn'](arg1);
 }
 
 export function LoadConfiguration(arg1) {
   return window['go']['main']['App']['LoadConfiguration'](arg1);
-}
-
-export function ReadData() {
-  return window['go']['main']['App']['ReadData']();
 }
 
 export function SaveConfiguration(arg1) {
@@ -36,10 +28,6 @@ export function ScanDevices() {
 
 export function SelectConfigFile() {
   return window['go']['main']['App']['SelectConfigFile']();
-}
-
-export function SetDACThr() {
-  return window['go']['main']['App']['SetDACThr']();
 }
 
 export function SetVCXO() {

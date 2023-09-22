@@ -3,23 +3,17 @@
 
 export function GetNetworkInterfaces():Promise<Array<string>>;
 
-export function GetRate():Promise<void>;
+export function HVOff(arg1:number):Promise<void>;
 
-export function HVOff():Promise<void>;
-
-export function HVOn():Promise<void>;
+export function HVOn(arg1:number):Promise<void>;
 
 export function LoadConfiguration(arg1:string):Promise<void>;
-
-export function ReadData():Promise<void>;
 
 export function SaveConfiguration(arg1:string):Promise<void>;
 
 export function ScanDevices():Promise<void>;
 
 export function SelectConfigFile():Promise<string>;
-
-export function SetDACThr():Promise<void>;
 
 export function SetVCXO():Promise<void>;
 

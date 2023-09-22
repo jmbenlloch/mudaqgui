@@ -55,14 +55,16 @@ function stopRun() {
   });
 }
 
+const broadcastAddress : Ref<number> = ref(255)
+
 function hvOn() {
-  HVOn().then(() => {
+  HVOn(broadcastAddress.value).then(() => {
     console.log("hv on")
   });
 }
 
 function hvOff() {
-  HVOff().then(() => {
+  HVOff(broadcastAddress.value).then(() => {
     console.log("hv off")
   });
 }
