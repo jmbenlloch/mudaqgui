@@ -3,8 +3,9 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateGlobalConfig, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateGlobalConfig, WriteDataFile, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import Rate from './Rate.vue';
+import NetworkInterface from './NetworkInterface.vue';
 
 
 const store = useConfigStore()
@@ -33,6 +34,12 @@ function saveConfiguration() {
 function loadConfiguration() {
   LoadConfiguration(configFile.value).then(() => {
     console.log("saved")
+  });
+}
+
+function writeData() {
+  WriteDataFile().then(() => {
+    console.log("data written")
   });
 }
 
@@ -98,8 +105,10 @@ function updateGlobalConfig() {
     <button @click="readData()" class="btn btn-primary">Read data</button>
     <button @click="setDACThr()" class="btn btn-primary">DAC</button>
     <button @click="updateGlobalConfig()" :disabled="disableForms" class="btn btn-primary">Send configuration to all cards</button>
+    <button @click="writeData" class="btn btn-primary">Write data</button>
 
     <Rate />
+    <NetworkInterface/>
 
     <div>
       <h3>Devices found</h3>

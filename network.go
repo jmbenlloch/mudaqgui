@@ -8,6 +8,16 @@ import (
 	"github.com/mdlayher/packet"
 )
 
+func getNetworkInterfacesNames() []string {
+	interface_names := make([]string, 0)
+	interfaces, _ := net.Interfaces()
+
+	for _, iface := range interfaces {
+		interface_names = append(interface_names, iface.Name)
+	}
+	return interface_names
+}
+
 func getNetworkInterface(ifname string) *net.Interface {
 	iface, err := net.InterfaceByName(ifname)
 	if err != nil {

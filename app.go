@@ -41,14 +41,6 @@ func (a *App) startup(ctx context.Context) {
 	}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)
-
-	a.iface = getNetworkInterface("enp5s0")
-	a.connection = createSocket(a.iface)
-
-	// Start go routines
-	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
-	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
-	go decodeFrame(a.recvFrameChannel, &a.data, ctx)
 }
 
 func (a *App) onshutdown(ctx context.Context) {
@@ -151,4 +143,22 @@ func (a *App) LoadConfiguration(file string) {
 	fmt.Println("file read")
 	sendConfigToUI(&a.data, a.ctx)
 	fmt.Println("event sent")
+}
+
+func (a *App) WriteDataFile() {
+	writeData()
+}
+
+func (a *App) GetNetworkInterfaces() []string {
+	return getNetworkInterfacesNames()
+}
+
+func (a *App) StartConnection(iface string) {
+	a.iface = getNetworkInterface(iface)
+	a.connection = createSocket(a.iface)
+
+	// Start go routines
+	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
+	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
+	go decodeFrame(a.recvFrameChannel, &a.data, a.ctx)
 }

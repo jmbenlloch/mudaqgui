@@ -7,6 +7,7 @@ require (
 	github.com/mdlayher/packet v1.1.2
 	github.com/wailsapp/wails/v2 v2.6.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
+	gonum.org/v1/hdf5 v0.0.0-20210714002203-8c5d23bc6946
 	gopkg.in/yaml.v3 v3.0.1
 )
 
