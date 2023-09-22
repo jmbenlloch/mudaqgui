@@ -51,11 +51,6 @@ func (a *App) ScanDevices() {
 	scanDevices(a.iface.HardwareAddr, a.sendFrameChannel)
 }
 
-func (a *App) GetRate() {
-	dst := getMacAddressDevice(0xff)
-	getRate(a.iface.HardwareAddr, dst, a.sendFrameChannel)
-}
-
 func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	a.dataTaking = true

@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateGlobalConfig, WriteDataFile, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, ReadData, GetRate, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateGlobalConfig, WriteDataFile, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, ReadData, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import Rate from './Rate.vue';
 import NetworkInterface from './NetworkInterface.vue';
 
@@ -40,12 +40,6 @@ function loadConfiguration() {
 function writeData() {
   WriteDataFile().then(() => {
     console.log("data written")
-  });
-}
-
-function getRate() {
-  GetRate().then(() => {
-    console.log("get rate")
   });
 }
 
@@ -97,7 +91,6 @@ function updateGlobalConfig() {
     <h2 class="font-bold text-xl">Menu</h2>
 
     <button @click="scanDevices()" class="btn btn-primary">Scan network</button>
-    <button @click="getRate()" class="btn btn-primary">Get Rate</button>
     <button @click="startRun()" class="btn btn-primary">Start run</button>
     <button @click="stopRun()" class="btn btn-primary">Stop run</button>
     <button @click="hvOn()" class="btn btn-primary">HV on</button>
