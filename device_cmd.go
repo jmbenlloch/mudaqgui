@@ -139,9 +139,9 @@ func sendSlowControlConfiguration(configuration map[string]any, src net.Hardware
 	sendChannel <- frame
 }
 
-func sendFPGAFil(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+9)
-	mask, ok := createDefaultSlowControlConfiguration()["discriminatorMask"].([32]int)
+	mask, ok := slowControlConfiguration["discriminatorMask"].([32]int)
 	if !ok {
 		log.Info("error")
 	}
@@ -156,7 +156,7 @@ func sendFPGAFil(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *F
 func updateCardConfig(card byte, data *DaqData, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
 	sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
-	sendFPGAFil(src, dst, sendChannel)
+	sendFPGAFil(data.slowControlConfiguration[card], src, dst, sendChannel)
 }
 
 func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
