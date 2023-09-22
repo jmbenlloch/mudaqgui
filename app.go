@@ -73,11 +73,6 @@ func (a *App) HVOff() {
 	hvOff(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) ReadData() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
-	readData(a.iface.HardwareAddr, dst, a.sendFrameChannel)
-}
-
 func (a *App) SetVCXO() {
 	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
 	setVCXO(a.iface.HardwareAddr, dst, a.sendFrameChannel)
