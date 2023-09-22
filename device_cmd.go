@@ -22,16 +22,13 @@ func scanDeviceMac(src net.HardwareAddr, dst net.HardwareAddr) (*Frame, error) {
 }
 
 func scanDevices(src net.HardwareAddr, sendChannel chan *Frame) {
-	// Scan several times. For some reason boards do not always answer (timing?)
-	for scan := 0; scan <= 2; scan++ {
-		for i := 0; i <= 255; i++ {
-			dst := getMacAddressDevice(byte(i))
-			frame, _ := scanDeviceMac(src, dst)
-			sendChannel <- frame
-			time.Sleep(10 * time.Millisecond)
-		}
-		time.Sleep(1 * time.Second)
+	for i := 0; i <= 255; i++ {
+		dst := getMacAddressDevice(byte(i))
+		frame, _ := scanDeviceMac(src, dst)
+		sendChannel <- frame
+		time.Sleep(10 * time.Millisecond)
 	}
+	time.Sleep(1 * time.Second)
 }
 
 func getRate(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
