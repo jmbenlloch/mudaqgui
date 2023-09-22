@@ -149,3 +149,8 @@ func (a *App) StartConnection(iface string) bool {
 	go decodeFrame(a.recvFrameChannel, &a.data, a.ctx)
 	return a.connection != nil
 }
+
+func (a *App) SetDACThreshold(card byte, dacValue uint16) {
+	dst := getMacAddressDevice(card)
+	setDACThr(card, &a.data, dacValue, a.iface.HardwareAddr, dst, a.sendFrameChannel)
+}

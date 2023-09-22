@@ -168,19 +168,19 @@ func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendC
 	sendChannel <- frame
 }
 
-func setDAC1Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	createDefaultSlowControlConfiguration()["dac1_code"] = 768
-	//sendSlowControlConfiguration(src, dst, sendChannel)
+func setDAC1Thr(card byte, data *DaqData, dacValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	data.slowControlConfiguration[card]["dac1_code"] = dacValue
+	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
 }
 
-func setDAC2Thr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	createDefaultSlowControlConfiguration()["dac2_code"] = 768
-	//sendSlowControlConfiguration(src, dst, sendChannel)
+func setDAC2Thr(card byte, data *DaqData, dacValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	data.slowControlConfiguration[card]["dac2_code"] = dacValue
+	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
 }
 
-func setDACThr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	setDAC1Thr(src, dst, sendChannel)
-	setDAC2Thr(src, dst, sendChannel)
+func setDACThr(card byte, data *DaqData, dacValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
+	setDAC1Thr(card, data, dacValue, src, dst, sendChannel)
+	setDAC2Thr(card, data, dacValue, src, dst, sendChannel)
 }
 
 ///////////
