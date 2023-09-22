@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { ScanDevices, UpdateGlobalConfig, WriteDataFile, SelectConfigFile, SaveConfiguration, LoadConfiguration, SetDACThr, HVOn, HVOff, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { ScanDevices, UpdateGlobalConfig, WriteDataFile, SelectConfigFile, SaveConfiguration, LoadConfiguration, HVOn, HVOff, StartRun, StopRun } from "../../wailsjs/go/main/App";
 import Rate from './Rate.vue';
 import NetworkInterface from './NetworkInterface.vue';
 
@@ -40,12 +40,6 @@ function loadConfiguration() {
 function writeData() {
   WriteDataFile().then(() => {
     console.log("data written")
-  });
-}
-
-function setDACThr() {
-  SetDACThr().then(() => {
-    console.log("get rate")
   });
 }
 
@@ -89,7 +83,6 @@ function updateGlobalConfig() {
     <button @click="stopRun()" class="btn btn-primary">Stop run</button>
     <button @click="hvOn()" class="btn btn-primary">HV on</button>
     <button @click="hvOff()" class="btn btn-primary">HV off</button>
-    <button @click="setDACThr()" class="btn btn-primary">DAC</button>
     <button @click="updateGlobalConfig()" :disabled="disableForms" class="btn btn-primary">Send configuration to all cards</button>
     <button @click="writeData" class="btn btn-primary">Write data</button>
 
