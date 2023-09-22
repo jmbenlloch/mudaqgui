@@ -7,16 +7,16 @@ import { storeToRefs } from 'pinia'
 
 
 const store = useConfigStore()
-const { disableForms } = storeToRefs(store)
+const { disableForms, selectedCard } = storeToRefs(store)
 
 const vcxo = ref(0)
 
 function updateVXCO(value: number) {
-  console.log("Do something VCXO")
+  vcxo.value = value
 }
 
 function setVCXO() {
-  SetVCXO().then(() => {
+  SetVCXO(selectedCard.value, vcxo.value).then(() => {
     console.log("get rate")
   });
 }
@@ -30,7 +30,7 @@ function setVCXO() {
         <label class="label">
           <span class="label-text">VCXO value</span>
         </label>
-        <NumericInput :value="vcxo" @update-value="updateVXCO" class="mx-1" :min="0" :max="1024" :disabled="disableForms"/>
+        <NumericInput :value="0" @update-value="updateVXCO" class="mx-1" :min="0" :max="1024" :disabled="disableForms"/>
       </div>
       <button @click="setVCXO()" class="btn btn-primary">VCXO</button>
     </div>

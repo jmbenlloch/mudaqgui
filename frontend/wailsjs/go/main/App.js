@@ -30,8 +30,8 @@ export function SelectConfigFile() {
   return window['go']['main']['App']['SelectConfigFile']();
 }
 
-export function SetVCXO() {
-  return window['go']['main']['App']['SetVCXO']();
+export function SetVCXO(arg1, arg2) {
+  return window['go']['main']['App']['SetVCXO'](arg1, arg2);
 }
 
 export function StartConnection(arg1) {

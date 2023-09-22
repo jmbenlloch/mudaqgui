@@ -15,7 +15,7 @@ export function ScanDevices():Promise<void>;
 
 export function SelectConfigFile():Promise<string>;
 
-export function SetVCXO():Promise<void>;
+export function SetVCXO(arg1:number,arg2:number):Promise<void>;
 
 export function StartConnection(arg1:string):Promise<boolean>;
 

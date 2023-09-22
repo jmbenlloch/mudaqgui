@@ -73,9 +73,10 @@ func (a *App) HVOff(cardID byte) {
 	hvOff(a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
-func (a *App) SetVCXO() {
-	dst := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, 0x45}
-	setVCXO(a.iface.HardwareAddr, dst, a.sendFrameChannel)
+func (a *App) SetVCXO(cardID byte, vcxoValue uint16) {
+	dst := getMacAddressDevice(cardID)
+	fmt.Println("set vcxo")
+	setVCXO(vcxoValue, a.iface.HardwareAddr, dst, a.sendFrameChannel)
 }
 
 func (a *App) UpdateCardConfig(card int, slowControl map[string]any, probe map[string]any) {
