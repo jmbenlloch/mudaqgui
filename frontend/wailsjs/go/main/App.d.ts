@@ -23,7 +23,7 @@ export function SetDACThr():Promise<void>;
 
 export function SetVCXO():Promise<void>;
 
-export function StartConnection(arg1:string):Promise<void>;
+export function StartConnection(arg1:string):Promise<boolean>;
 
 export function StartRun():Promise<void>;
 

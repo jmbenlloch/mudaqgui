@@ -2,11 +2,20 @@
 import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { GetNetworkInterfaces, StartConnection } from "../../wailsjs/go/main/App";
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/vue/24/outline'
 
 const interfaces: Ref<Array<string>> = ref([])
-const iface : Ref<string> = ref("")
+const iface: Ref<string> = ref("")
+const connected: Ref<boolean> = ref(false)
 
-onMounted(() =>{
+function startConnection() {
+  StartConnection(iface.value).then((result: boolean) => {
+    console.log(result)
+    connected.value = result
+  })
+}
+
+onMounted(() => {
   GetNetworkInterfaces().then((result: Array<string>) => {
     interfaces.value = result
   });
@@ -27,6 +36,14 @@ onMounted(() =>{
         </select>
       </div>
     </div>
-    <button @click="StartConnection(iface)" class="btn btn-primary">Start connection</button>
+    <div v-if="!connected" class="flex flex-wrap gap-1">
+      <XCircleIcon class="text-sm text-red-600 h-6 w-6" />
+      <span class="text-red-600">Not connected</span>
+    </div>
+    <div v-if="connected" class="flex flex-wrap gap-1">
+      <CheckCircleIcon class="text-sm text-green-600 h-6 w-6" />
+      <span class="text-green-600">Connected!</span>
+    </div>
+    <button @click="startConnection" class="btn btn-primary">Start connection</button>
   </div>
 </template>

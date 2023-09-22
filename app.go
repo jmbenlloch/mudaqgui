@@ -153,7 +153,7 @@ func (a *App) GetNetworkInterfaces() []string {
 	return getNetworkInterfacesNames()
 }
 
-func (a *App) StartConnection(iface string) {
+func (a *App) StartConnection(iface string) bool {
 	a.iface = getNetworkInterface(iface)
 	a.connection = createSocket(a.iface)
 
@@ -161,4 +161,5 @@ func (a *App) StartConnection(iface string) {
 	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
 	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
 	go decodeFrame(a.recvFrameChannel, &a.data, a.ctx)
+	return a.connection != nil
 }
