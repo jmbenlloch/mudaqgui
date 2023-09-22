@@ -52,7 +52,6 @@ func sendFrameViaSocket(sendChannel chan *Frame, connection *packet.Conn) {
 			log.Fatalf("failed to write frame: %v", err)
 		}
 	}
-
 }
 
 // receiveMessages continuously receives messages over a connection. The messages
