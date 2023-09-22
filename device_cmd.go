@@ -176,10 +176,7 @@ func uint32ToByteArray(value uint32) []byte {
 }
 
 func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
-	fmt.Println("actual vcxo", vcxoValue)
 	payload := make([]byte, 2+6) // register + mac address
-	//	var vcxo uint16 = vcxoValue
-	//vcxo = 1023
 	bits := uint16ToByteArray(vcxoValue)
 	copy(payload[0:2], bits) // VCXO
 	copy(payload[2:], src)   // MAC
