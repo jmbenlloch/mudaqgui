@@ -109,10 +109,6 @@ func sendProbeConfiguration(configuration map[string]any, src net.HardwareAddr, 
 	fmt.Println("probe register")
 	fmt.Println(configuration)
 	fmt.Println("finished")
-	configuration2 := createDefaultProbeRegisterConfiguration()
-	fmt.Println("probe register2")
-	fmt.Println(configuration2)
-	fmt.Println("finished")
 	configurationBytes := configurationToByteArray(256, configuration, citirocProbeBitPosition)
 
 	for i, value := range configurationBytes {
@@ -163,18 +159,6 @@ func updateCardConfig(card byte, data *DaqData, src net.HardwareAddr, dst net.Ha
 	sendFPGAFil(src, dst, sendChannel)
 }
 
-func uint16ToByteArray(value uint16) []byte {
-	array := make([]byte, 2)
-	binary.LittleEndian.PutUint16(array, value)
-	return array
-}
-
-func uint32ToByteArray(value uint32) []byte {
-	array := make([]byte, 4)
-	binary.LittleEndian.PutUint32(array, value)
-	return array
-}
-
 func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+6) // register + mac address
 	bits := uint16ToByteArray(vcxoValue)
@@ -199,6 +183,10 @@ func setDACThr(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fra
 	setDAC2Thr(src, dst, sendChannel)
 }
 
+///////////
+// utils //
+///////////
+
 func convertToBinary(values [32]int) uint32 {
 	var result uint32 = 0
 	for i := 0; i < len(values); i++ {
@@ -206,4 +194,16 @@ func convertToBinary(values [32]int) uint32 {
 		result = result | (bit << (31 - i))
 	}
 	return result
+}
+
+func uint16ToByteArray(value uint16) []byte {
+	array := make([]byte, 2)
+	binary.LittleEndian.PutUint16(array, value)
+	return array
+}
+
+func uint32ToByteArray(value uint32) []byte {
+	array := make([]byte, 4)
+	binary.LittleEndian.PutUint32(array, value)
+	return array
 }
