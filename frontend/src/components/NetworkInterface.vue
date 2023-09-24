@@ -25,7 +25,7 @@ onMounted(() => {
 <template>
   <div class="border p-2 m-2">
     <div class="flex justify-between">
-      <h2 class="font-bold text-xl">Network interface</h2>
+      <h2 class="font-bold text-xl pl-2">Network interface</h2>
       <div class="mx-4 mt-1 object-center pr-4">
         <div v-if="!connected" class="flex flex-wrap gap-1">
           <XCircleIcon class="text-red-600 w-6" />

@@ -26,7 +26,7 @@ function loadConfiguration() {
 
 <template>
   <div class="border p-2 m-2">
-    <h2 class="text-xl font-bold">Load/Save configuration</h2>
+    <h2 class="text-xl font-bold pl-2">Load/Save configuration</h2>
     <div class="form-control max-w-xs">
       <label class="label">
         <span class="text-lg">Select file</span>
