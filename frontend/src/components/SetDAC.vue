@@ -16,7 +16,7 @@ function updateDAC(value: number){
 <template>
   <div class="border p-2 m-1">
     <h2 class="font-bold text-xl pl-2">DAC threshold</h2>
-    <div class="w-fit px-3">
+    <div class="w-fit px-3 mt-2">
       <div class="form-control max-w-xs">
         <NumericInput :value="slowControl[selectedCard].dac1_code" @update-value="updateDAC" class="mx-1"
           :disabled="disableForms" :min="0" :max="1024" />

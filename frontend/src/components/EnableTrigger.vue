@@ -32,10 +32,10 @@ watch(triggerEnable, (value) => {
       </div>
     </div>
 
-    <div class="form-control">
+    <div class="form-control w-fit">
       <label class="label cursor-pointer">
-        <input v-model="slowControl[selectedCard].enable_or32" type="checkbox" class="checkbox" :true-value="1" :false-value="0" :disabled="disableForms"/>
-        <span class="label-text text-lg">Trigger OR 32</span>
+        <input v-model="slowControl[selectedCard].enable_or32" type="checkbox" class="checkbox checkbox-sm" :true-value="1" :false-value="0" :disabled="disableForms"/>
+        <span class="label-text text-lg mx-3">Trigger OR 32</span>
       </label>
     </div>
   </div>
