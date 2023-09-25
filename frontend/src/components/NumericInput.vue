@@ -49,7 +49,7 @@ watch(value, (newValue) => {
 </script>
 
 <template>
-  <div class="custom-number-input h-10 w-16">
+  <div class="custom-number-input h-10 w-24">
     <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
       <button @click="decrement"
         class=" bg-gray-300 text-gray-600 h-full w-20 rounded-l cursor-pointer outline-none"

@@ -34,7 +34,7 @@ watch(slowControl, (value) => {
   <div class="border p-2 m-2">
     <h2 class="font-bold text-xl pl-2">HG preamp gain/bias</h2>
     <div class="w-fit grid grid-cols-4 gap-2">
-      <div class="form-control" v-for="(n, index) in nChannels">
+      <div class="form-control" v-for="(n, index) in nChannels" :key="`gain-${index}`">
         <label class="label cursor-pointer">
           <span class="label-text">Ch. {{ n }}</span>
           <NumericInput :value="gains[parseInt(index)]" @update-value="updateGain($event, parseInt(index))"
