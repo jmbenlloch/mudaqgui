@@ -49,10 +49,10 @@ watch(value, (newValue) => {
 </script>
 
 <template>
-  <div class="custom-number-input h-10 w-24">
-    <div class="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1">
+  <div class="custom-number-input h-8 w-24">
+    <div class="flex flex-row w-full rounded-lg relative bg-transparent">
       <button @click="decrement"
-        class=" bg-gray-300 text-gray-600 h-full w-20 rounded-l cursor-pointer outline-none"
+        class=" bg-gray-300 text-gray-600 w-20 rounded-l cursor-pointer outline-none"
         :class="[props.disabled ? '': 'hover:text-gray-700 hover:bg-gray-400']">
         <span class="m-auto text-2xl font-thin">−</span>
       </button>
@@ -60,7 +60,7 @@ watch(value, (newValue) => {
         class="outline-none focus:outline-none text-center w-full bg-gray-300 hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700"
         name="custom-input-number" v-model="value" />
       <button @click="increment"
-        class="bg-gray-300 text-gray-600 h-full w-20 rounded-r cursor-pointer"
+        class="bg-gray-300 text-gray-600 w-20 rounded-r cursor-pointer"
         :class="[props.disabled ? '': 'hover:text-gray-700 hover:bg-gray-400']">
         <span class="m-auto text-2xl font-thin">+</span>
       </button>
