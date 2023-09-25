@@ -21,13 +21,13 @@ watch(triggerEnable, (value) => {
 </script>
 
 <template>
-  <div>
-    <h2 class="font-bold text-xl">Enable Trigger</h2>
-    <div class="border border-primary w-fit grid grid-cols-4 gap-2">
+  <div class="border p-2 m-2">
+    <h2 class="font-bold text-xl pl-2">Enable Trigger</h2>
+    <div class="w-fit grid grid-cols-4 gap-2">
       <div class="form-control" v-for="n in nChannels">
         <label class="label cursor-pointer">
           <input v-model="triggerEnable" type="checkbox" class="checkbox" :value="n - 1" :disabled="disableForms"/>
-          <span class="label-text">Ch. {{ n }}</span>
+          <span class="label-text">Ch {{ n }}</span>
         </label>
       </div>
     </div>

@@ -27,20 +27,6 @@ function stopRun() {
   });
 }
 
-const broadcastAddress : Ref<number> = ref(255)
-
-function hvOn() {
-  HVOn(broadcastAddress.value).then(() => {
-    console.log("hv on")
-  });
-}
-
-function hvOff() {
-  HVOff(broadcastAddress.value).then(() => {
-    console.log("hv off")
-  });
-}
-
 function updateGlobalConfig() {
   UpdateGlobalConfig(slowControl.value, probe.value).then(() => {
     console.log("update all configs")
@@ -51,13 +37,13 @@ function updateGlobalConfig() {
 <template>
   <div class="border p-2 m-2">
     <h2 class="font-bold text-xl pl-2">Run control</h2>
-    <div class="flex flex-wrap flex-col">
+    <div class="flex flex-wrap flex-col gap-2">
       <div class="flex flex-row gap-2 m-2">
         <button @click="startRun()" class="btn btn-success w-1/2">Start run</button>
         <button @click="stopRun()" class="btn btn-error w-1/2">Stop run</button>
       </div>
-      <button @click="updateGlobalConfig()" :disabled="disableForms" class="btn btn-primary">Send configuration to all cards</button>
-      <button @click="writeData" class="btn btn-primary">Write data</button>
+      <button @click="updateGlobalConfig()" :disabled="disableForms" class="mx-2 btn btn-primary">Send configuration to all cards</button>
+      <button @click="writeData" class="mx-2 btn btn-primary">Write data</button>
     </div>
  </div>
 </template>

@@ -10,13 +10,30 @@ const { rates, totalRate } = storeToRefs(store)
 </script>
 
 <template>
-  <div>
-    <h2 class="font-bold text-xl">Rates</h2>
+  <div class="border p-2 m-2">
+    <h2 class="font-bold text-xl pl-2">Rates</h2>
     <div>
-      <ul>
-        <li v-for="(value, key) in rates">{{ key }} : {{ value }} Hz</li>
-        <li>Total rate: {{ totalRate }} Hz</li>
-      </ul>
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>Card</th>
+            <th>Rate (Hz)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          <tr v-for="(value, key) in rates">
+            <th>{{ key }}</th>
+            <td>{{ value }}</td>
+          </tr>
+
+          <tr>
+            <th>Total</th>
+            <td>{{ totalRate }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

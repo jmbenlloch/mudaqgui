@@ -19,9 +19,9 @@ watch(probeRegister, (value) => {
 </script>
 
 <template>
-  <div>
-    <h2 class="font-bold text-xl">Probe register</h2>
-    <div class="border border-primary w-fit px-3">
+  <div class="border p-2 m-2">
+    <h2 class="font-bold text-xl pl-2">Probe register</h2>
+    <div class="w-fit px-3">
       <div class="form-control max-w-xs">
         <label class="label">
           <span class="label-text">Select channel</span>

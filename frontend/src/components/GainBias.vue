@@ -31,9 +31,9 @@ watch(slowControl, (value) => {
 </script>
 
 <template>
-  <div>
-    <h2 class="font-bold text-xl">HG preamp gain/bias</h2>
-    <div class="border border-primary w-fit grid grid-cols-4 gap-2">
+  <div class="border p-2 m-2">
+    <h2 class="font-bold text-xl pl-2">HG preamp gain/bias</h2>
+    <div class="w-fit grid grid-cols-4 gap-2">
       <div class="form-control" v-for="(n, index) in nChannels">
         <label class="label cursor-pointer">
           <span class="label-text">Ch. {{ n }}</span>

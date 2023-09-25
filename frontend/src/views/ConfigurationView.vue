@@ -10,16 +10,20 @@ import HVControl from '@/components/HVControl.vue';
 </script>
 
 <template>
-  <div class="flex gap-3">
-    <EnableAmplifier />
-    <EnableTrigger />
-    <div class="flex flex-col gap-3">
-      <ProbeRegister />
-      <SetDAC />
-      <SetVCXO />
+  <div class="flex flex-col flex-wrap">
+    <div class="flex gap-3">
+      <EnableAmplifier />
+      <EnableTrigger />
+      <div class="flex flex-col gap-3">
+        <ProbeRegister />
+        <SetDAC />
+        <SetVCXO />
+      </div>
+      <SendCardConfig />
+      <HVControl />
     </div>
-    <GainBias />
-    <SendCardConfig />
-    <HVControl />
+    <div>
+      <GainBias />
+    </div>
   </div>
 </template>

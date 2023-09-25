@@ -31,9 +31,7 @@ function scanDevices() {
         <span v-for="card in cards">{{ card }}, </span>
         <span v-if="cards.length == 0">None</span>
       </div>
-
     </div>
-
     <button @click="scanDevices()" class="btn btn-primary w-full">Scan network</button>
   </div>
 </template>

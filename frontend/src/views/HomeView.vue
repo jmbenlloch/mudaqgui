@@ -9,10 +9,8 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 <template>
   <main>
-    <h1 class="text-sm">NEXT Muon DAQ</h1>
-
     <div class="flex flex-row">
-      <div class="w-1/6">
+      <div class="w-1/6 bg-base-200">
         <MenuBar />
       </div>
 
