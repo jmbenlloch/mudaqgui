@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Rate from './Rate.vue';
+import RateGlobal from './RateGlobal.vue';
 import NetworkInterface from './NetworkInterface.vue';
 import LoadSaveConfig from './LoadSaveConfig.vue';
 import SelectCard from './SelectCard.vue';
@@ -11,7 +11,7 @@ import HVControlGlobal from './HVControlGlobal.vue';
   <div>
     <RunControl />
     <HVControlGlobal />
-    <Rate />
+    <RateGlobal />
     <NetworkInterface/>
     <SelectCard />
     <LoadSaveConfig />

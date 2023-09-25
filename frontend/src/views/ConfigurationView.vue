@@ -11,10 +11,10 @@ import HVControl from '@/components/HVControl.vue';
 
 <template>
   <div class="flex flex-col flex-wrap">
-    <div class="flex gap-3">
+    <div class="flex gap-1">
       <EnableAmplifier />
       <EnableTrigger />
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-1">
         <ProbeRegister />
         <SetDAC />
         <SetVCXO />

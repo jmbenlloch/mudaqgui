@@ -14,7 +14,11 @@ function updateConfigFromUI() {
 </script>
 
 <template>
-  <div>
-    <button @click="updateConfigFromUI()" class="btn btn-primary" :disabled="disableForms">Send card configuration</button>
+  <div class="border p-2 m-1">
+    <h2 class="font-bold text-xl pl-2">Send card configuration</h2>
+    <div class="w-fit px-3">
+      <button @click="updateConfigFromUI()" class="btn btn-primary" :disabled="disableForms">Send card
+        configuration</button>
+    </div>
   </div>
 </template>

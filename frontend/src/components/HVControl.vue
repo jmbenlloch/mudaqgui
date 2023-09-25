@@ -23,8 +23,13 @@ function hvOff() {
 </script>
 
 <template>
-  <div>
-    <button @click="hvOn()" class="btn btn-primary">HV on</button>
-    <button @click="hvOff()" class="btn btn-primary">HV off</button>
+  <div class="border p-2 m-2">
+    <h2 class="font-bold text-xl pl-2">SiPM HV</h2>
+    <div class="flex flex-wrap flex-col">
+      <div class="flex flex-row gap-2 m-2">
+        <button @click="hvOn()" class="btn btn-primary w-1/2">HV on</button>
+        <button @click="hvOff()" class="btn btn-primary w-1/2">HV off</button>
+      </div>
+    </div>
   </div>
 </template>

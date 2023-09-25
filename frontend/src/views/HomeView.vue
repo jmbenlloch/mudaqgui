@@ -4,6 +4,7 @@ import ConfigurationView from './ConfigurationView.vue';
 import EventsView from './EventsView.vue';
 import ChannelView from './ChannelView.vue';
 import AllChannelsView from './AllChannelsView.vue';
+import Rate from '../components/Rate.vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 </script>
 
@@ -14,10 +15,11 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
         <MenuBar />
       </div>
 
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-2">
         <TabGroup>
           <TabList class="tabs">
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Configuration</Tab>
+            <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Rates</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Plots</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Single channel</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">All channels</Tab>
@@ -25,6 +27,9 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
           <TabPanels>
             <TabPanel>
               <ConfigurationView />
+            </TabPanel>
+            <TabPanel>
+              <Rate />
             </TabPanel>
             <TabPanel>
               <EventsView />

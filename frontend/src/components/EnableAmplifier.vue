@@ -32,12 +32,12 @@ watch(ampEnable, (value) => {
 </script>
 
 <template>
-  <div class="border p-2 m-2">
+  <div class="border p-2 m-1">
     <h2 class="font-bold text-xl pl-2">Enable Amplifier</h2>
-    <div class="w-fit grid grid-cols-4 gap-2">
+    <div class="w-fit grid grid-cols-4 gap-1">
       <div class="form-control" v-for="n in nChannels">
         <label class="label cursor-pointer">
-          <input v-model="ampEnable" type="checkbox" class="checkbox" :value="n-1" :disabled="disableForms"/>
+          <input v-model="ampEnable" type="checkbox" class="checkbox checkbox-xs" :value="n-1" :disabled="disableForms"/>
           <span class="label-text">Ch. {{ n-1 }}</span> 
         </label>
       </div>
