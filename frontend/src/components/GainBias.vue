@@ -38,8 +38,12 @@ watch(slowControl, (value) => {
         <label class="label cursor-pointer">
           <span class="label-text">Ch. {{ n }}</span>
           <NumericInput :value="gains[parseInt(index)]" @update-value="updateGain($event, parseInt(index))"
+            @increment="updateGain($event, parseInt(index))"
+            @decrement="updateGain($event, parseInt(index))"
             class="mx-1" :min="0" :max="63" :disabled="disableForms"/>
           <NumericInput :value="biases[parseInt(index)]" @update-value="updateBias($event, parseInt(index))" class="mx-1"
+            @increment="updateBias($event, parseInt(index))"
+            @decrement="updateBias($event, parseInt(index))"
             :min="0" :max="254" :disabled="disableForms"/>
         </label>
       </div>
