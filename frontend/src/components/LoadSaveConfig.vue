@@ -36,11 +36,13 @@ function loadConfiguration() {
         bg-gray-800 border border-r-0 rounded-l-lg">
           <span class="text-gray-100">BROWSE</span>
         </div>
-        <input @click="selectConfigurationFile" :value="`  ... ${configFile.slice(-20)}`" placeholder="Select file..." type="text" readonly
-          class="input input-bordered block pl-24 w-full max-w-xs truncate ..." />
+        <input @click="selectConfigurationFile" :value="`  ... ${configFile.slice(-20)}`" placeholder="Select file..."
+          type="text" readonly class="input input-bordered block pl-24 w-full max-w-xs truncate ..." />
       </div>
-      <button @click="loadConfiguration" class="btn btn-primary mt-2">Load configuration</button>
-      <button @click="saveConfiguration" class="btn btn-warning mt-2">Save configuration</button>
+      <div class="flex flex-row gap-2 m-2">
+        <button @click="loadConfiguration" class="btn btn-primary mt-2 w-1/2">Load</button>
+        <button @click="saveConfiguration" class="btn btn-warning mt-2 w-1/2">Save</button>
+      </div>
     </div>
   </div>
 </template>

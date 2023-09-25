@@ -19,8 +19,10 @@ import HVControl from '@/components/HVControl.vue';
         <SetDAC />
         <SetVCXO />
       </div>
-      <SendCardConfig />
-      <HVControl />
+      <div class="flex flex-col gap-1">
+        <SendCardConfig />
+        <HVControl />
+      </div>
     </div>
     <div>
       <GainBias />

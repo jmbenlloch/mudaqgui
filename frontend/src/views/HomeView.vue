@@ -11,7 +11,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 <template>
   <main>
     <div class="flex flex-row">
-      <div class="w-1/6 bg-base-200">
+      <div class="w-2/12 bg-base-200">
         <MenuBar />
       </div>
 
