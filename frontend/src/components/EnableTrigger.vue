@@ -19,7 +19,7 @@ watch(triggerEnable, (value) => {
 })
 
 watch(slowControl, (value) => {
-  const array: Array<number> = Array(nChannels.value).fill(0)
+  const array: Array<number> = []
   let mask = slowControl.value[selectedCard.value].discriminatorMask
   for (let i = 0; i < mask.length; i++) {
     if (mask[i] == 1){
