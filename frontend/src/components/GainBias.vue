@@ -27,7 +27,6 @@ watch(slowControl, (value) => {
   console.log(gains.value)
   console.log(biases.value)
 })
-
 </script>
 
 <template>

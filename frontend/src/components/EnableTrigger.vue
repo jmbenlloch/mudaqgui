@@ -25,10 +25,9 @@ watch(slowControl, (value) => {
     if (mask[i] == 1){
       array.push(i)
     }
-    triggerEnable.value = array
   }
+  triggerEnable.value = array
 })
-
 </script>
 
 <template>

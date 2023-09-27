@@ -29,6 +29,17 @@ watch(ampEnable, (value) => {
   console.log(array)
   slowControl.value[selectedCard.value].channel_preamp_disable = array
 })
+
+watch(slowControl, (value) => {
+  const array: Array<number> = Array(nChannels.value).fill(1)
+  let channel_preamp_disable = slowControl.value[selectedCard.value].channel_preamp_disable
+  for (let i = 0; i < channel_preamp_disable.length; i++) {
+    if (channel_preamp_disable[i] == 1){
+      array.push(i)
+    }
+    ampEnable.value = array
+  }
+})
 </script>
 
 <template>
