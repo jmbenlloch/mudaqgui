@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
 
-const triggerEnable = ref([])
+const triggerEnable: Ref<Array<number>> = ref([])
 const nChannels = ref(32)
 
 const store = useConfigStore()
@@ -17,6 +18,16 @@ watch(triggerEnable, (value) => {
   slowControl.value[selectedCard.value].discriminatorMask = array
 })
 
+watch(slowControl, (value) => {
+  const array: Array<number> = Array(nChannels.value).fill(0)
+  let mask = slowControl.value[selectedCard.value].discriminatorMask
+  for (let i = 0; i < mask.length; i++) {
+    if (mask[i] == 1){
+      array.push(i)
+    }
+    triggerEnable.value = array
+  }
+})
 
 </script>
 
