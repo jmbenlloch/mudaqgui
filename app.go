@@ -35,6 +35,8 @@ func (a *App) startup(ctx context.Context) {
 		devices:                  make(map[byte]*net.HardwareAddr),
 		slowControlConfiguration: make(map[byte]map[string]any),
 		probeConfiguration:       make(map[byte]map[string]any),
+		rates:                    make(map[byte]float32),
+		cards:                    make(map[byte]bool),
 		events:                   make(map[byte][]EventData),
 		charges:                  make(map[byte]ChargeHistogram),
 		chargesRebinned:          make(map[byte]ChargeHistogram),

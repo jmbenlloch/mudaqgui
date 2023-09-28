@@ -57,7 +57,6 @@ export const useConfigStore = defineStore('config', () => {
   const cards: Ref<Array<Number>> = ref([])
   // 1024 is a special value for initialization. Max card id is 255.
   const selectedCard: Ref<number> = ref(nonValidCardID)
-  console.log(selectedCard.value)
   const disableForms = computed(() => selectedCard.value == nonValidCardID)
 
   EventsOn("configSlowControl", (data) => {
@@ -77,7 +76,7 @@ export const useConfigStore = defineStore('config', () => {
   })
 
   EventsOn("cards", (data: Array<Number>) => {
-    //console.log("Cards", data)
+    console.log("Cards", data)
     cards.value = data
   })
 

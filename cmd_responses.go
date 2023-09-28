@@ -12,10 +12,17 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
+type CardRate struct {
+	Card byte    `json:"card"`
+	Rate float32 `json:"rate"`
+}
+
 type DaqData struct {
 	devices                  map[byte]*net.HardwareAddr
 	slowControlConfiguration map[byte]map[string]any
 	probeConfiguration       map[byte]map[string]any
+	rates                    map[byte]float32
+	cards                    map[byte]bool
 	events                   map[byte][]EventData
 	charges                  map[byte]ChargeHistogram
 	chargesRebinned          map[byte]ChargeHistogram
@@ -71,8 +78,23 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	data.devices[frame.Source[5]] = &frame.Source
 	//fmt.Println(frame.Source[5])
 	//fmt.Println(data.devices)
-	data.slowControlConfiguration[frame.Source[5]] = createDefaultSlowControlConfiguration()
-	data.probeConfiguration[frame.Source[5]] = createDefaultProbeRegisterConfiguration()
+
+	if _, exists := data.cards[frame.Source[5]]; !exists {
+		// Add default config and send to UI
+		data.slowControlConfiguration[frame.Source[5]] = createDefaultSlowControlConfiguration()
+		data.probeConfiguration[frame.Source[5]] = createDefaultProbeRegisterConfiguration()
+		sendConfigToUI(data, ctx)
+
+		// Add card and send to UI
+		data.cards[frame.Source[5]] = true
+		cards := make([]int, 0, len(data.devices))
+		for key := range data.devices {
+			cards = append(cards, int(key))
+		}
+		// For some reason these values are not properly passed to JS
+		//runtime.EventsEmit(ctx, "cards", maps.Keys(data.devices))
+		runtime.EventsEmit(ctx, "cards", cards)
+	}
 
 	// Add new list to events if this card did not exist
 	if _, exists := data.events[frame.Source[5]]; !exists {
@@ -94,16 +116,6 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 		}
 		data.chargesRebinned[frame.Source[5]] = chargeHistogramsRebin
 	}
-
-	cards := make([]int, 0, len(data.devices))
-	for key := range data.devices {
-		cards = append(cards, int(key))
-	}
-	// For some reason these values are not properly passed to JS
-	//runtime.EventsEmit(ctx, "cards", maps.Keys(data.devices))
-	runtime.EventsEmit(ctx, "cards", cards)
-
-	sendConfigToUI(data, ctx)
 }
 
 func decodeData(frame Frame, data *DaqData, ctx context.Context) {
@@ -153,16 +165,11 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
 }
 
-type CardRate struct {
-	Card byte    `json:"card"`
-	Rate float32 `json:"rate"`
-}
-
 func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
-	rateEvent := CardRate{Card: frame.Source[5], Rate: rate}
-	runtime.EventsEmit(ctx, "rate", rateEvent)
+	data.rates[frame.Source[5]] = rate
+	runtime.EventsEmit(ctx, "rate", data.rates)
 }
 
 func decodeEvent(data []byte) *EventData {

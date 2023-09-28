@@ -20,27 +20,22 @@ const store = useConfigStore()
 const { slowControl, selectedCard, disableForms } = storeToRefs(store)
 
 watch(ampEnable, (value) => {
-  console.log(value)
   const array: Array<number> = Array(nChannels.value).fill(1)
   for (let ch of ampEnable.value){
-    console.log(ch)
     array[ch] = 0
   }
-  console.log(array)
   slowControl.value[selectedCard.value].channel_preamp_disable = array
 })
 
 watch(slowControl, (value) => {
   const array: Array<number> = []
   let channel_preamp_disable = slowControl.value[selectedCard.value].channel_preamp_disable
-  console.log("config amp enable: ", channel_preamp_disable)
   for (let i = 0; i < channel_preamp_disable.length; i++) {
     if (channel_preamp_disable[i] == 0){
       array.push(i)
     }
   }
   ampEnable.value = array
-  console.log("amp enable: ", ampEnable.value)
 })
 </script>
 
