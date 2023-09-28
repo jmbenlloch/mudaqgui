@@ -96,7 +96,7 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	}
 
 	cards := make([]int, 0, len(data.devices))
-	for key, _ := range data.devices {
+	for key := range data.devices {
 		cards = append(cards, int(key))
 	}
 	// For some reason these values are not properly passed to JS

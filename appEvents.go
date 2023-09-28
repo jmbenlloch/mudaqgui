@@ -34,5 +34,4 @@ func sendConfigToUI(data *DaqData, ctx context.Context) {
 
 	runtime.EventsEmit(ctx, "configSlowControl", slowControl)
 	runtime.EventsEmit(ctx, "configProbe", probe)
-	fmt.Println("event emitted")
 }
