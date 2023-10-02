@@ -43,6 +43,11 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
   animation: false,
   //parsing: false,
   responsive: false,
+  plugins: {
+    legend: {
+      display: false,
+    }
+  }
 })
 
 function updatePlot(){

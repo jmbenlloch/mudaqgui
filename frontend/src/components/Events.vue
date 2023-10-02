@@ -38,6 +38,9 @@ const chartOptions: Ref<ChartOptions<"line">> = ref({
     intersect: false
   },
   plugins: {
+    legend: {
+      display: false,
+    },
     decimation: {
       enabled: true,
       algorithm: 'lttb',

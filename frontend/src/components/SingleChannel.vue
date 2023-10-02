@@ -35,7 +35,12 @@ const chartOptions: Ref<ChartOptions> = ref({
   // Turn off animations and data parsing for performance
   animation: false,
   //parsing: false,
-  responsive: true
+  responsive: true,
+  plugins: {
+    legend: {
+      display: false,
+    }
+  },
 })
 
 function updatePlot() {
