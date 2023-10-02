@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math"
 	"net"
@@ -140,7 +139,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		//log.Printf("[t1] %d", evt.T1)
 
 		for i := 0; i < 32; i++ {
-			log.Printf("charge[%d]: %d", i, evt.Charges[i])
+			//log.Printf("charge[%d]: %d", i, evt.Charges[i])
 			chargesHistograms := data.charges[frame.Source[5]]
 			count := chargesHistograms.Charges[i][evt.Charges[i]]
 			chargesHistograms.Charges[i][evt.Charges[i]] = count + 1
@@ -148,15 +147,11 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 			// Rebin
 			chargesHistograms = data.chargesRebinned[frame.Source[5]]
 			index := evt.Charges[i] / 4
-			fmt.Println(index, evt.Charges[i])
+			//fmt.Println(index, evt.Charges[i])
 			count = chargesHistograms.Charges[i][index]
 			chargesHistograms.Charges[i][index] = count + 1
 		}
 	}
-
-	runtime.EventsEmit(ctx, "events", data.events)
-	runtime.EventsEmit(ctx, "charges", data.charges)
-	runtime.EventsEmit(ctx, "chargesRebin", data.chargesRebinned)
 
 	//s := hex.EncodeToString(frame.Payload)
 	//fmt.Println(s)
