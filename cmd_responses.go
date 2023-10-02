@@ -6,6 +6,7 @@ import (
 	"log"
 	"math"
 	"net"
+	"os"
 
 	"encoding/binary"
 
@@ -23,12 +24,13 @@ type DaqData struct {
 	probeConfiguration       map[byte]map[string]any
 	rates                    map[byte]float32
 	cards                    map[byte]bool
-	events                   map[byte][]EventData
+	events                   []EventData
 	charges                  map[byte]ChargeHistogram
 	chargesRebinned          map[byte]ChargeHistogram
 }
 
 type EventData struct {
+	card       byte
 	eventT0    bool
 	eventT1    bool
 	overflowT0 bool
@@ -99,9 +101,9 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	}
 
 	// Add new list to events if this card did not exist
-	if _, exists := data.events[frame.Source[5]]; !exists {
-		data.events[frame.Source[5]] = make([]EventData, 0, 10000)
-	}
+	//if _, exists := data.events[frame.Source[5]]; !exists {
+	//data.events[frame.Source[5]] = make([]EventData, 0, 10000)
+	//}
 
 	// Add new charge histogram if this card did not exist
 	if _, exists := data.charges[frame.Source[5]]; !exists {
@@ -134,7 +136,9 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
 		data_start += packet_size
 
-		data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
+		//data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
+		evt.card = frame.Source[5]
+		data.events = append(data.events, *evt)
 
 		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
 		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
@@ -153,6 +157,17 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 			//fmt.Println(index, evt.Charges[i])
 			count = chargesHistograms.Charges[i][index]
 			chargesHistograms.Charges[i][index] = count + 1
+		}
+	}
+
+	if len(data.events) > 100 {
+		fname := "/home/jmbenlloch/go/myproject/testfile.h5"
+		if _, err := os.Stat(fname); err != nil {
+			h5file := openFile(fname)
+			dataset := createTable(h5file)
+			writeData(dataset)
+			dataset.Close()
+			h5file.Close()
 		}
 	}
 

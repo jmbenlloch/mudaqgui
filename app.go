@@ -37,7 +37,7 @@ func (a *App) startup(ctx context.Context) {
 		probeConfiguration:       make(map[byte]map[string]any),
 		rates:                    make(map[byte]float32),
 		cards:                    make(map[byte]bool),
-		events:                   make(map[byte][]EventData),
+		events:                   make([]EventData, 0, 10000),
 		charges:                  make(map[byte]ChargeHistogram),
 		chargesRebinned:          make(map[byte]ChargeHistogram),
 	}
@@ -134,7 +134,7 @@ func (a *App) LoadConfiguration(file string) {
 }
 
 func (a *App) WriteDataFile() {
-	writeData()
+	writeDataTest()
 }
 
 func (a *App) GetNetworkInterfaces() []string {

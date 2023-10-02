@@ -43,3 +43,5 @@ require (
 // replace github.com/wailsapp/wails/v2 v2.5.1 => /home/jmbenlloch/go/pkg/mod
 
 //replace github.com/wailsapp/wails/v2 => /home/jmbenlloch/go/wails/v2
+
+replace gonum.org/v1/hdf5 => /home/jmbenlloch/go/hdf5
