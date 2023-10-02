@@ -16,6 +16,7 @@ type App struct {
 	sendFrameChannel chan *Frame
 	recvFrameChannel chan Frame
 	data             DaqData
+	writerData       WriterData
 	connection       *packet.Conn
 	iface            *net.Interface
 	dataTaking       bool
@@ -41,6 +42,7 @@ func (a *App) startup(ctx context.Context) {
 		charges:                  make(map[byte]ChargeHistogram),
 		chargesRebinned:          make(map[byte]ChargeHistogram),
 	}
+	a.writerData = WriterData{}
 	a.sendFrameChannel = make(chan *Frame, 2000)
 	a.recvFrameChannel = make(chan Frame, 2000)
 }
@@ -53,15 +55,30 @@ func (a *App) ScanDevices() {
 	scanDevices(a.iface.HardwareAddr, a.sendFrameChannel)
 }
 
+func createOutputFile(writerData *WriterData) {
+	fname := "/home/jmbenlloch/go/myproject/testfile.h5"
+	h5file := openFile(fname)
+	writerData.file = h5file
+	dataset := createTable(writerData.file)
+	writerData.data = dataset
+}
+
+func closeOutputFile(writerData *WriterData) {
+	writerData.file.Close()
+	writerData.data.Close()
+}
+
 func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	a.dataTaking = true
 	devices := maps.Values(a.data.devices)
+	createOutputFile(&a.writerData)
 	go readAllCards(a.iface.HardwareAddr, devices, a.sendFrameChannel, a)
 }
 
 func (a *App) StopRun() {
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
+	closeOutputFile(&a.writerData)
 	a.dataTaking = false
 }
 
@@ -148,7 +165,7 @@ func (a *App) StartConnection(iface string) bool {
 	// Start go routines
 	go sendFrameViaSocket(a.sendFrameChannel, a.connection)
 	go receiveMessages(a.recvFrameChannel, a.connection, a.iface.MTU)
-	go decodeFrame(a.recvFrameChannel, &a.data, a.ctx)
+	go decodeFrame(a.recvFrameChannel, &a.data, &a.writerData, a.ctx)
 	return a.connection != nil
 }
 

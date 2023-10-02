@@ -6,6 +6,12 @@ import (
 	"gonum.org/v1/hdf5"
 )
 
+type WriterData struct {
+	file    *hdf5.File
+	data    *hdf5.Dataset
+	charges *hdf5.Dataset
+}
+
 type EventDataHDF5 struct {
 	//	eventT0    bool
 	//	eventT1    bool
@@ -140,10 +146,10 @@ func createTable(file *hdf5.File) *hdf5.Dataset {
 	return dset
 }
 
-func writeData(dataset *hdf5.Dataset) {
-	const length2 = 20
-	s2 := [length2]EventDataHDF5{}
-	for i := 0; i < int(length2); i++ {
+func writeData(dataset *hdf5.Dataset, events *[]EventData) {
+	length := uint(len(*events))
+	s2 := make([]EventDataHDF5, length)
+	for i := 0; i < int(length); i++ {
 		s2[i] = EventDataHDF5{
 			T0:         678,
 			T1:         456,
@@ -153,7 +159,7 @@ func writeData(dataset *hdf5.Dataset) {
 	}
 	fmt.Printf(":: data: %v\n", s2)
 
-	dims2 := []uint{20}
+	dims2 := []uint{length}
 	space2, err := hdf5.CreateSimpleDataspace(dims2, nil)
 	if err != nil {
 		fmt.Println("space")
@@ -165,7 +171,7 @@ func writeData(dataset *hdf5.Dataset) {
 	eventsInFile := dimsGot[0]
 	fmt.Println("Size: ", dimsGot, maxdimsGot)
 	fmt.Println(dimsGot, maxdimsGot)
-	newsize := []uint{eventsInFile + length2}
+	newsize := []uint{eventsInFile + length}
 	dataset.Resize(newsize)
 	dimsGot, maxdimsGot, err = dataset.Space().SimpleExtentDims()
 	fmt.Println(dimsGot, maxdimsGot)
@@ -173,7 +179,7 @@ func writeData(dataset *hdf5.Dataset) {
 	fmt.Println(file_space2)
 
 	start := []uint{eventsInFile}
-	count := []uint{length2}
+	count := []uint{length}
 	file_space2.SelectHyperslab(start, nil, count, nil)
 
 	// write data to the dataset

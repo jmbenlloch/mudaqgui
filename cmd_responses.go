@@ -6,7 +6,6 @@ import (
 	"log"
 	"math"
 	"net"
-	"os"
 
 	"encoding/binary"
 
@@ -46,7 +45,7 @@ type ChargeHistogram struct {
 	Charges [32][]int32 `json="charges"`
 }
 
-func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
+func decodeFrame(recvChannel chan Frame, data *DaqData, writerData *WriterData, ctx context.Context) {
 	for {
 		frame := <-recvChannel
 		//log.Printf("length %d, %s", len(frame.Payload), frame.Command)
@@ -61,6 +60,7 @@ func decodeFrame(recvChannel chan Frame, data *DaqData, ctx context.Context) {
 			decodeData(frame, data, ctx)
 		case FEB_EOF_CDR:
 			//log.Println("End of data")
+			writeEvents(data, writerData)
 		case FEB_OK_SCR:
 			log.Println("CITIROC slow control OK")
 		case FEB_OK_PMR:
@@ -160,22 +160,19 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		}
 	}
 
-	if len(data.events) > 100 {
-		fname := "/home/jmbenlloch/go/myproject/testfile.h5"
-		if _, err := os.Stat(fname); err != nil {
-			h5file := openFile(fname)
-			dataset := createTable(h5file)
-			writeData(dataset)
-			dataset.Close()
-			h5file.Close()
-		}
-	}
-
-	//s := hex.EncodeToString(frame.Payload)
-	//fmt.Println(s)
+	// s := hex.EncodeToString(frame.Payload)
+	// fmt.Println(s)
+	//
 	//	log.Printf("[%s] %x", frame.Source.String(), frame.Payload)
 	//	log.Printf("[%s] %x", frame.Source.String(), string(frame.EtherType))
+	//
 	// log.Printf("[%s] %x", frame.Source.String(), string(frame.Command))
+}
+
+func writeEvents(data *DaqData, writerData *WriterData) {
+	if len(data.events) > 100 {
+		writeData(writerData.data, &data.events)
+	}
 }
 
 func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
