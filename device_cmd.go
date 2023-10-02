@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/labstack/gommon/log"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 func getMacAddressDevice(device byte) net.HardwareAddr {
@@ -93,6 +94,7 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 }
 
 func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel chan *Frame, a *App) {
+	counter := 0
 	for a.dataTaking {
 		fmt.Println(a.dataTaking)
 		fmt.Printf("len channel: %v\n", len(sendChannel))
@@ -100,6 +102,11 @@ func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel
 		for _, dst := range devices {
 			getRate(src, *dst, sendChannel)
 			readData(src, *dst, sendChannel)
+
+			if counter%20 == 0 {
+				runtime.EventsEmit(a.ctx, "rate", a.data.rates)
+			}
+			counter = counter + 1
 		}
 	}
 }

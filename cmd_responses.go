@@ -169,7 +169,6 @@ func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
 	data.rates[frame.Source[5]] = rate
-	runtime.EventsEmit(ctx, "rate", data.rates)
 }
 
 func decodeEvent(data []byte) *EventData {
