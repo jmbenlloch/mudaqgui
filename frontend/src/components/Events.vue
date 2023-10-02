@@ -20,8 +20,9 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 const chartData = ref({
   //labels: range(0, 2000),
   datasets: [{
-    data: [{x: 0, y: 1}, {x: 1, y: 3}, {x: 2, y: 10}],
+    data: [],
     pointStyle: false as const,
+    borderColor: '#FF6384',
   }]
 })
 
@@ -50,6 +51,10 @@ const chartOptions: Ref<ChartOptions<"line">> = ref({
   scales: {
     x: {
       type: 'linear',
+      title : {
+        display: true,
+        text: "Event",
+      },
       suggestedMin: 0,
       suggestedMax: 100,
       ticks: {
@@ -61,6 +66,10 @@ const chartOptions: Ref<ChartOptions<"line">> = ref({
     },
     y: {
       type: 'linear',
+      title : {
+        display: true,
+        text: "t0",
+      },
       suggestedMin: 0,
       suggestedMax: 100,
       ticks: {
@@ -79,6 +88,7 @@ watch(t1, (values) => {
     datasets: [{
       data: values[selectedCard.value],
       pointStyle: false as const,
+      borderColor: '#FF6384',
     }]
   }
   console.log(t1.value)

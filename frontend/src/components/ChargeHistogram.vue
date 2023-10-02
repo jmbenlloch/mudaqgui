@@ -47,7 +47,21 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
     legend: {
       display: false,
     }
-  }
+  },
+  scales: {
+    x: {
+      title : {
+        display: true,
+        text: "Charge (ADC counts)",
+      },
+    },
+    y: {
+      title : {
+        display: true,
+        text: "# Events",
+      },
+    },
+  },
 })
 
 function updatePlot(){
