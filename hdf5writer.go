@@ -167,8 +167,8 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 	}
 	fmt.Printf(":: data: %v\n", s2)
 
-	dims2 := []uint{length}
-	space2, err := hdf5.CreateSimpleDataspace(dims2, nil)
+	dims := []uint{length}
+	dataspace, err := hdf5.CreateSimpleDataspace(dims, nil)
 	if err != nil {
 		fmt.Println("space")
 		panic(err)
@@ -178,22 +178,19 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 	dimsGot, maxdimsGot, err := dataset.Space().SimpleExtentDims()
 	eventsInFile := dimsGot[0]
 	fmt.Println("Size: ", dimsGot, maxdimsGot)
-	fmt.Println(dimsGot, maxdimsGot)
 	newsize := []uint{eventsInFile + length}
 	dataset.Resize(newsize)
-	dimsGot, maxdimsGot, err = dataset.Space().SimpleExtentDims()
-	fmt.Println(dimsGot, maxdimsGot)
-	file_space2 := dataset.Space()
-	fmt.Println(file_space2)
+	filespace := dataset.Space()
+	fmt.Println(filespace)
 
 	start := []uint{eventsInFile}
 	count := []uint{length}
-	file_space2.SelectHyperslab(start, nil, count, nil)
+	filespace.SelectHyperslab(start, nil, count, nil)
 
 	// write data to the dataset
 	fmt.Printf(":: dset.Write...\n")
 	//err = dset.Write(&s2)
-	err = dataset.WriteSubset(&s2, space2, file_space2)
+	err = dataset.WriteSubset(&s2, dataspace, filespace)
 	if err != nil {
 		fmt.Println("final write")
 		panic(err)
