@@ -20,7 +20,7 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 const chartData = ref({
   //labels: range(0, 2000),
   datasets: [{
-    data: [],
+    data: [{x:0, y:0}],
     pointStyle: false as const,
     borderColor: '#FF6384',
   }]
