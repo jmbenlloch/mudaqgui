@@ -3,17 +3,11 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
-import { UpdateGlobalConfig, WriteDataFile, HVOn, HVOff, StartRun, StopRun } from "../../wailsjs/go/main/App";
+import { UpdateGlobalConfig, HVOn, HVOff, StartRun, StopRun } from "../../wailsjs/go/main/App";
 
 const store = useConfigStore()
 const { slowControl, probe, disableForms } = storeToRefs(store)
 
-
-function writeData() {
-  WriteDataFile().then(() => {
-    console.log("data written")
-  });
-}
 
 function startRun() {
   StartRun().then(() => {
@@ -43,7 +37,6 @@ function updateGlobalConfig() {
         <button @click="stopRun()" class="btn btn-error w-1/2">Stop run</button>
       </div>
       <button @click="updateGlobalConfig()" :disabled="disableForms" class="mx-2 btn btn-primary">Send configuration to all cards</button>
-      <button @click="writeData" class="mx-2 btn btn-primary">Write data</button>
     </div>
  </div>
 </template>

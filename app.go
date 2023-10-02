@@ -150,10 +150,6 @@ func (a *App) LoadConfiguration(file string) {
 	fmt.Println("event sent")
 }
 
-func (a *App) WriteDataFile() {
-	writeDataTest()
-}
-
 func (a *App) GetNetworkInterfaces() []string {
 	return getNetworkInterfacesNames()
 }

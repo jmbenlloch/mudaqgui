@@ -28,5 +28,3 @@ export function StopRun():Promise<void>;
 export function UpdateCardConfig(arg1:number,arg2:{[key: string]: any},arg3:{[key: string]: any}):Promise<void>;
 
 export function UpdateGlobalConfig(arg1:{[key: number]: {[key: string]: any}},arg2:{[key: number]: {[key: string]: any}}):Promise<void>;
-
-export function WriteDataFile():Promise<void>;

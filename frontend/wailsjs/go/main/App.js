@@ -57,7 +57,3 @@ export function UpdateCardConfig(arg1, arg2, arg3) {
 export function UpdateGlobalConfig(arg1, arg2) {
   return window['go']['main']['App']['UpdateGlobalConfig'](arg1, arg2);
 }
-
-export function WriteDataFile() {
-  return window['go']['main']['App']['WriteDataFile']();
-}
