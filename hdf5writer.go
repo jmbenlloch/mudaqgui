@@ -13,8 +13,11 @@ type WriterData struct {
 }
 
 type EventDataHDF5 struct {
-	//	eventT0    bool
-	//	eventT1    bool
+	card       byte
+	eventT0    bool
+	eventT1    bool
+	overflowT0 bool
+	overflowT1 bool
 	T0         uint32 `t0`
 	T1         uint32 `t1`
 	LostBuffer uint16 `lostBuffer`
@@ -151,10 +154,15 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 	s2 := make([]EventDataHDF5, length)
 	for i := 0; i < int(length); i++ {
 		s2[i] = EventDataHDF5{
-			T0:         678,
-			T1:         456,
-			LostBuffer: 34567,
-			LostFPGA:   677,
+			card:       (*events)[i].card,
+			eventT0:    (*events)[i].eventT0,
+			eventT1:    (*events)[i].eventT1,
+			overflowT0: (*events)[i].overflowT0,
+			overflowT1: (*events)[i].overflowT1,
+			T0:         (*events)[i].T0,
+			T1:         (*events)[i].T1,
+			LostBuffer: (*events)[i].LostBuffer,
+			LostFPGA:   (*events)[i].LostFPGA,
 		}
 	}
 	fmt.Printf(":: data: %v\n", s2)
