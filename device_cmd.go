@@ -96,8 +96,8 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel chan *Frame, a *App) {
 	counter := 0
 	for a.dataTaking {
-		fmt.Println(a.dataTaking)
-		fmt.Printf("len channel: %v\n", len(sendChannel))
+		//fmt.Println(a.dataTaking)
+		//fmt.Printf("len channel: %v\n", len(sendChannel))
 		time.Sleep(50 * time.Millisecond)
 		for _, dst := range devices {
 			getRate(src, *dst, sendChannel)

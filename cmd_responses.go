@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math"
 	"net"
@@ -28,8 +29,10 @@ type DaqData struct {
 }
 
 type EventData struct {
-	//	eventT0    bool
-	//	eventT1    bool
+	eventT0    bool
+	eventT1    bool
+	overflowT0 bool
+	overflowT1 bool
 	T0         uint32     `json="t0"`
 	T1         uint32     `json="t1"`
 	LostBuffer uint16     `json="lostBuffer"`
@@ -173,6 +176,15 @@ func decodeEvent(data []byte) *EventData {
 	var t0 uint32 = binary.LittleEndian.Uint32(data[4:8])
 	var t1 uint32 = binary.LittleEndian.Uint32(data[8:12])
 
+	fmt.Printf("t0: %08x\n", t0)
+	fmt.Printf("t1: %08x\n", t1)
+
+	var eventT0 bool = (t0 & 0x80000000) > 0
+	var eventT1 bool = (t1 & 0x80000000) > 0
+
+	var overflowT0 bool = (t0 & 0x40000000) > 0
+	var overflowT1 bool = (t1 & 0x40000000) > 0
+
 	var t0LSB uint32 = (t0 & 0x00000003)
 	var t1LSB uint32 = (t1 & 0x00000003)
 
@@ -195,6 +207,10 @@ func decodeEvent(data []byte) *EventData {
 	}
 
 	evt := EventData{
+		eventT0:    eventT0,
+		eventT1:    eventT1,
+		overflowT0: overflowT0,
+		overflowT1: overflowT1,
 		LostBuffer: eventLostBuffer,
 		LostFPGA:   eventLostFPGA,
 		T0:         t0,
