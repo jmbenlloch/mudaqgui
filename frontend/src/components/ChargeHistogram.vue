@@ -54,6 +54,11 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
         display: true,
         text: "Charge (ADC counts)",
       },
+      ticks: {
+        callback: function(value, index, ticks) {
+          return index*8; // rebin factor
+        }
+      },
     },
     y: {
       title : {
