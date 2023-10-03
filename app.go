@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"path/filepath"
+	"strconv"
+	"strings"
 
 	"github.com/mdlayher/packet"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -55,8 +58,34 @@ func (a *App) ScanDevices() {
 	scanDevices(a.iface.HardwareAddr, a.sendFrameChannel)
 }
 
+func getOutputFilename() string {
+	basepath := "/home/jmbenlloch/go/myproject"
+	pattern := filepath.Join(basepath, "muons_run_*.h5")
+	files, _ := filepath.Glob(pattern)
+
+	fmt.Println(files)
+
+	var latest_run int64 = 1
+
+	if len(files) > 0 {
+		for i := 0; i < len(files); i++ {
+			basename := strings.Split(files[i], ".")[0]
+			fnumberStr := strings.Split(basename, "_")[2]
+			fnumber, _ := strconv.ParseInt(fnumberStr, 10, 32)
+			fmt.Println("file: ", fnumber)
+			if fnumber >= latest_run {
+				latest_run = fnumber + 1
+				fmt.Println("latest run: ", latest_run)
+			}
+		}
+	}
+
+	filename := fmt.Sprintf("%s/muons_run_%d.h5", basepath, latest_run)
+	return filename
+}
+
 func createOutputFile(writerData *WriterData) {
-	fname := "/home/jmbenlloch/go/myproject/testfile.h5"
+	fname := getOutputFilename()
 	h5file := openFile(fname)
 	writerData.file = h5file
 	dataset := createTable(writerData.file)
