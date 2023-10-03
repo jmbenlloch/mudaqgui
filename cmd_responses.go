@@ -146,7 +146,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		//log.Printf("[t1] %d", evt.T1)
 
 		for i := 0; i < 32; i++ {
-			log.Printf("charge[%d]: %d", i, evt.Charges[i])
+			//log.Printf("charge[%d]: %d", i, evt.Charges[i])
 			chargesHistograms := data.charges[frame.Source[5]]
 			count := chargesHistograms.Charges[i][evt.Charges[i]]
 			chargesHistograms.Charges[i][evt.Charges[i]] = count + 1

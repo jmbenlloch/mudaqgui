@@ -81,6 +81,12 @@ func (a *App) StartRun() {
 
 func (a *App) StopRun() {
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
+	// Write remaining events
+	writeData(a.writerData.data, &a.data.events)
+	writeCharges(a.writerData.charges, &a.data.events)
+	a.data.events = make([]EventData, 0, 10000)
+
+	// Close file and stop data taking
 	closeOutputFile(&a.writerData)
 	a.dataTaking = false
 }
