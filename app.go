@@ -60,12 +60,15 @@ func createOutputFile(writerData *WriterData) {
 	h5file := openFile(fname)
 	writerData.file = h5file
 	dataset := createTable(writerData.file)
+	chargesArray := createChargesArray(writerData.file)
 	writerData.data = dataset
+	writerData.charges = chargesArray
 }
 
 func closeOutputFile(writerData *WriterData) {
 	writerData.file.Close()
 	writerData.data.Close()
+	writerData.charges.Close()
 }
 
 func (a *App) StartRun() {

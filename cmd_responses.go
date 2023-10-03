@@ -172,6 +172,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 func writeEvents(data *DaqData, writerData *WriterData) {
 	if len(data.events) > 100 {
 		writeData(writerData.data, &data.events)
+		writeCharges(writerData.charges)
 		data.events = make([]EventData, 0, 10000)
 	}
 }
