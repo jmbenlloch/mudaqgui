@@ -104,6 +104,12 @@ func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	a.dataTaking = true
 	devices := maps.Values(a.data.devices)
+
+	for _, device := range devices {
+		card := (*device)[5]
+		initialize_charge_histograms(card, &a.data)
+	}
+
 	createOutputFile(&a.writerData)
 	go readAllCards(a.iface.HardwareAddr, devices, a.sendFrameChannel, a)
 }

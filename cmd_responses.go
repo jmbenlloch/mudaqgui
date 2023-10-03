@@ -107,19 +107,21 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 
 	// Add new charge histogram if this card did not exist
 	if _, exists := data.charges[frame.Source[5]]; !exists {
-		chargeHistograms := ChargeHistogram{}
-		for i := 0; i < 32; i++ {
-			chargeHistograms.Charges[i] = make([]int32, 1024)
-		}
-		data.charges[frame.Source[5]] = chargeHistograms
-
-		// Rebinned
-		chargeHistogramsRebin := ChargeHistogram{}
-		for i := 0; i < 32; i++ {
-			chargeHistogramsRebin.Charges[i] = make([]int32, 128)
-		}
-		data.chargesRebinned[frame.Source[5]] = chargeHistogramsRebin
+		initialize_charge_histograms(frame.Source[5], data)
 	}
+}
+
+func initialize_charge_histograms(card byte, data *DaqData) {
+	data.charges[card] = *create_charge_histograms(1024)
+	data.chargesRebinned[card] = *create_charge_histograms(128)
+}
+
+func create_charge_histograms(nbins int) *ChargeHistogram {
+	chargeHistograms := ChargeHistogram{}
+	for i := 0; i < 32; i++ {
+		chargeHistograms.Charges[i] = make([]int32, nbins)
+	}
+	return &chargeHistograms
 }
 
 func decodeData(frame Frame, data *DaqData, ctx context.Context) {
