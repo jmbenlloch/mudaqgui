@@ -170,17 +170,23 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 	fmt.Printf(":: dset.Write... [ok]\n")
 }
 
-func writeCharges(dataset *hdf5.Dataset) {
+func writeCharges(dataset *hdf5.Dataset, events *[]EventData) {
 	//	charges := [2][32]int16{
 	//		{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2},
 	//		{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2},
 	//	}
-	charges := make([][32]int16, 2)
-	charges[0] = [32]int16{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2}
-	charges[1] = [32]int16{1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2}
+	const nCharges = 32
+	length := uint(len(*events))
+	charges := make([][32]uint16, length)
 	fmt.Println(charges)
 
-	dims := []uint{2, 32}
+	for evt := 0; evt < int(length); evt++ {
+		for sensor := 0; sensor < nCharges; sensor++ {
+			charges[evt][sensor] = (*events)[evt].Charges[sensor]
+		}
+	}
+
+	dims := []uint{length, nCharges}
 	dataspace, err := hdf5.CreateSimpleDataspace(dims, nil)
 	if err != nil {
 		fmt.Println("space")
@@ -191,7 +197,7 @@ func writeCharges(dataset *hdf5.Dataset) {
 	dimsGot, maxdimsGot, err := dataset.Space().SimpleExtentDims()
 	eventsInFile := dimsGot[0]
 	fmt.Println("2-Size array: ", dimsGot, maxdimsGot)
-	newsize := []uint{eventsInFile + 2, 32}
+	newsize := []uint{eventsInFile + length, nCharges}
 	dataset.Resize(newsize)
 	filespace := dataset.Space()
 	fmt.Println(filespace)
@@ -200,7 +206,7 @@ func writeCharges(dataset *hdf5.Dataset) {
 	fmt.Println("3-Size array: ", dimsGot, maxdimsGot)
 
 	start := []uint{eventsInFile, 0}
-	count := []uint{2, 32}
+	count := []uint{length, nCharges}
 	filespace.SelectHyperslab(start, nil, count, nil)
 
 	// write data to the dataset
