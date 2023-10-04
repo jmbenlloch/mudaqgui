@@ -26,6 +26,8 @@ type DaqData struct {
 	events                   []EventData
 	charges                  map[byte]ChargeHistogram
 	chargesRebinned          map[byte]ChargeHistogram
+	t0s                      map[byte][]uint32
+	t1s                      map[byte][]uint32
 }
 
 type EventData struct {
@@ -109,6 +111,11 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	if _, exists := data.charges[frame.Source[5]]; !exists {
 		initialize_charge_histograms(frame.Source[5], data)
 	}
+
+	if _, exists := data.t0s[frame.Source[5]]; !exists {
+		data.t0s[frame.Source[5]] = make([]uint32, 0)
+		data.t1s[frame.Source[5]] = make([]uint32, 0)
+	}
 }
 
 func initialize_charge_histograms(card byte, data *DaqData) {
@@ -141,6 +148,14 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		//data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
 		evt.card = frame.Source[5]
 		data.events = append(data.events, *evt)
+
+		nEvts := len(data.t0s[evt.card])
+		start := 0
+		if (nEvts - 1000) > 0 {
+			start = nEvts - 1000
+		}
+		data.t0s[evt.card] = append(data.t0s[evt.card][start:], evt.T0)
+		data.t1s[evt.card] = append(data.t1s[evt.card][start:], evt.T1)
 
 		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
 		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)

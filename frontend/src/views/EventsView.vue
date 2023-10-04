@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import Events from '@/components/Events.vue';
+import EventsT0 from '@/components/EventsT0.vue';
+import EventsT1 from '@/components/EventsT1.vue';
 </script>
 
 <template>
   <div class="flex gap-3">
-    <Events />
+    <EventsT0 />
+  </div>
+  <div class="flex gap-3">
+    <EventsT1 />
   </div>
 </template>

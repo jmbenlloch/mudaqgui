@@ -105,8 +105,8 @@ func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel
 
 			if counter%20 == 0 {
 				runtime.EventsEmit(a.ctx, "rate", a.data.rates)
-
-				runtime.EventsEmit(a.ctx, "events", a.data.events)
+				runtime.EventsEmit(a.ctx, "t0s", a.data.t0s)
+				runtime.EventsEmit(a.ctx, "t1s", a.data.t1s)
 				runtime.EventsEmit(a.ctx, "charges", a.data.charges)
 				runtime.EventsEmit(a.ctx, "chargesRebin", a.data.chargesRebinned)
 			}

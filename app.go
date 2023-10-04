@@ -44,6 +44,8 @@ func (a *App) startup(ctx context.Context) {
 		events:                   make([]EventData, 0, 10000),
 		charges:                  make(map[byte]ChargeHistogram),
 		chargesRebinned:          make(map[byte]ChargeHistogram),
+		t0s:                      make(map[byte][]uint32),
+		t1s:                      make(map[byte][]uint32),
 	}
 	a.writerData = WriterData{}
 	a.sendFrameChannel = make(chan *Frame, 2000)

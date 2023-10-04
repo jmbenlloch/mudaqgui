@@ -4,14 +4,8 @@ import { defineStore } from 'pinia'
 import { EventsOn } from '../../wailsjs/runtime/runtime'
 import { fill } from 'lodash'
 
-type EventData = {
-  [index: number]: [{
-    T0: number,
-    T1: number,
-    LostBuffer: number,
-    LostFPGA: number,
-    Charges: Array<number>,
-  }]
+type TimeData = {
+  [index: number]: [number]
 }
 
 type Point = {
@@ -26,15 +20,16 @@ type ChargeHistogram = {
 }
 
 export const useEventStore = defineStore('events', () => {
-  const events: Ref<EventData> = ref({})
+  const t0s_backend: Ref<TimeData> = ref({})
+  const t1s_backend: Ref<TimeData> = ref({})
 
   const t0 = computed(() => {
     let t0s: { [index: string]: Array<Point> } = {}
-    Object.entries(events.value).forEach(entry => {
+    Object.entries(t0s_backend.value).forEach(entry => {
       const [card, events] = entry;
       console.log("data: ", card, events);
       t0s[card] = events.map((o, index) => {
-        return { x: index, y: o.T0 }
+        return { x: index, y: o }
       })
     });
     return t0s
@@ -42,19 +37,25 @@ export const useEventStore = defineStore('events', () => {
 
   const t1 = computed(() => {
     let t1s: { [index: string]: Array<Point> } = {}
-    Object.entries(events.value).forEach(entry => {
+    Object.entries(t1s_backend.value).forEach(entry => {
       const [card, events] = entry;
       console.log("data: ", card, events);
       t1s[card] = events.map((o, index) => {
-        return { x: index, y: o.T1 }
+        return { x: index, y: o }
       })
     });
+    console.log("t1s: ", t1)
     return t1s
   })
 
-  EventsOn("events", (data) => {
-    console.log("events", data)
-    events.value = data
+  EventsOn("t0s", (data) => {
+    console.log("t0s backend", data)
+    t0s_backend.value = data
+  })
+
+  EventsOn("t1s", (data) => {
+    console.log("t1s backend", data)
+    t1s_backend.value = data
   })
 
   EventsOn("charges", (data) => {
@@ -92,5 +93,5 @@ export const useEventStore = defineStore('events', () => {
     },
   })
 
-  return { events, t0, t1, charges, chargesRebin }
+  return { t0, t1, charges, chargesRebin }
 })

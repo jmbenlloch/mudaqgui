@@ -11,7 +11,7 @@ import { storeToRefs } from 'pinia'
 
 const eventStore = useEventStore()
 const configStore = useConfigStore()
-const { events, t0, t1 } = storeToRefs(eventStore)
+const { t0 } = storeToRefs(eventStore)
 const { selectedCard } = storeToRefs(configStore)
 
 
@@ -82,7 +82,7 @@ const chartOptions: Ref<ChartOptions<"line">> = ref({
   }
 })
 
-watch(t1, (values) => {
+watch(t0, (values) => {
   chartData.value = {
     //labels: range(values[selectedCard.value].length),
     datasets: [{
@@ -91,7 +91,6 @@ watch(t1, (values) => {
       borderColor: '#FF6384',
     }]
   }
-  console.log(t1.value)
 })
 </script>
 
