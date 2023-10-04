@@ -46,6 +46,8 @@ func (a *App) startup(ctx context.Context) {
 		chargesRebinned:          make(map[byte]ChargeHistogram),
 		t0s:                      make(map[byte][]uint32),
 		t1s:                      make(map[byte][]uint32),
+		lostBuffer:               make(map[byte]uint32),
+		lostFGPA:                 make(map[byte]uint32),
 	}
 	a.writerData = WriterData{}
 	a.sendFrameChannel = make(chan *Frame, 2000)
@@ -112,6 +114,8 @@ func (a *App) StartRun() {
 		initialize_charge_histograms(card, &a.data)
 		a.data.t0s[card] = make([]uint32, 0)
 		a.data.t1s[card] = make([]uint32, 0)
+		a.data.lostBuffer[card] = 0
+		a.data.lostFGPA[card] = 0
 	}
 
 	createOutputFile(&a.writerData)

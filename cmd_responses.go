@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math"
 	"net"
@@ -28,6 +27,8 @@ type DaqData struct {
 	chargesRebinned          map[byte]ChargeHistogram
 	t0s                      map[byte][]uint32
 	t1s                      map[byte][]uint32
+	lostBuffer               map[byte]uint32
+	lostFGPA                 map[byte]uint32
 }
 
 type EventData struct {
@@ -141,7 +142,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 	packet_size := 76
 
 	for data_start < len(frame.Payload)-2 {
-		log.Printf("reading: %d - %d Len: %d", data_start, data_start+packet_size, len(frame.Payload))
+		//log.Printf("reading: %d - %d Len: %d", data_start, data_start+packet_size, len(frame.Payload))
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
 		data_start += packet_size
 
@@ -156,6 +157,9 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		}
 		data.t0s[evt.card] = append(data.t0s[evt.card][start:], evt.T0)
 		data.t1s[evt.card] = append(data.t1s[evt.card][start:], evt.T1)
+
+		data.lostBuffer[evt.card] = data.lostBuffer[evt.card] + uint32(evt.LostBuffer)
+		data.lostFGPA[evt.card] = data.lostFGPA[evt.card] + uint32(evt.LostFPGA)
 
 		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
 		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
@@ -206,9 +210,6 @@ func decodeEvent(data []byte) *EventData {
 
 	var t0 uint32 = binary.LittleEndian.Uint32(data[4:8])
 	var t1 uint32 = binary.LittleEndian.Uint32(data[8:12])
-
-	fmt.Printf("t0: %08x\n", t0)
-	fmt.Printf("t1: %08x\n", t1)
 
 	var eventT0 bool = (t0 & 0x80000000) > 0
 	var eventT1 bool = (t1 & 0x80000000) > 0

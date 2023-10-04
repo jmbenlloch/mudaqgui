@@ -38,7 +38,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="w-fit px-3 flex items-end">
+    <div class="px-3 flex flex-col gap-2">
       <div class="form-control max-w-xs">
         <label class="label">
           <span class="label-text">Select interface</span>
@@ -48,7 +48,7 @@ onMounted(() => {
           <option v-for="item in interfaces" :value="item">{{ item }}</option>
         </select>
       </div>
-      <button @click="startConnection" class="btn btn-primary mx-2">Start connection</button>
+      <button @click="startConnection" class="btn btn-primary">Start connection</button>
     </div>
  </div>
 </template>

@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 
 
 const store = useRateStore()
-const { rates, totalRate } = storeToRefs(store)
+const { rates, lostBuffer, lostFPGA, totalRate, totalLostBuffer, totalLostFPGA } = storeToRefs(store)
 </script>
 
 <template>
@@ -14,23 +14,27 @@ const { rates, totalRate } = storeToRefs(store)
     <h2 class="font-bold text-xl pl-2">Rates</h2>
     <div>
       <table class="table">
-        <!-- head -->
         <thead>
           <tr>
             <th>Card</th>
             <th>Rate (Hz)</th>
+            <th>Events lost (buffer)</th>
+            <th>Events lost (FPGA)</th>
           </tr>
         </thead>
         <tbody>
-          <!-- row 1 -->
           <tr v-for="(value, key) in rates">
             <th>{{ key }}</th>
             <td>{{ value }}</td>
+            <td>{{ lostBuffer[key] }}</td>
+            <td>{{ lostFPGA[key] }}</td>
           </tr>
 
           <tr>
             <th>Total</th>
             <td>{{ totalRate }}</td>
+            <td>{{ totalLostBuffer }}</td>
+            <td>{{ totalLostFPGA }}</td>
           </tr>
         </tbody>
       </table>

@@ -137,7 +137,7 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 			LostFPGA:   (*events)[i].LostFPGA,
 		}
 	}
-	fmt.Printf(":: data: %v\n", s2)
+	//fmt.Printf(":: data: %v\n", s2)
 
 	dims := []uint{length}
 	dataspace, err := hdf5.CreateSimpleDataspace(dims, nil)
@@ -178,7 +178,7 @@ func writeCharges(dataset *hdf5.Dataset, events *[]EventData) {
 	const nCharges = 32
 	length := uint(len(*events))
 	charges := make([][32]uint16, length)
-	fmt.Println(charges)
+	//fmt.Println(charges)
 
 	for evt := 0; evt < int(length); evt++ {
 		for sensor := 0; sensor < nCharges; sensor++ {
