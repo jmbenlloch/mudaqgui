@@ -110,6 +110,8 @@ func (a *App) StartRun() {
 	for _, device := range devices {
 		card := (*device)[5]
 		initialize_charge_histograms(card, &a.data)
+		a.data.t0s[card] = make([]uint32, 0)
+		a.data.t1s[card] = make([]uint32, 0)
 	}
 
 	createOutputFile(&a.writerData)

@@ -4,7 +4,7 @@ import EventsT1 from '@/components/EventsT1.vue';
 </script>
 
 <template>
-  <div class="flex gap-3">
+  <div class="flex flex-col gap-3">
     <EventsT0 />
   </div>
   <div class="flex gap-3">
