@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { range } from 'lodash';
 import { useConfigStore } from '../stores/configuration'
@@ -19,6 +19,17 @@ function disableAll(){
 const store = useConfigStore()
 const { slowControl, selectedCard, disableForms } = storeToRefs(store)
 
+function loadConfiguration(){
+  const array: Array<number> = []
+  let channel_preamp_disable = slowControl.value[selectedCard.value].channel_preamp_disable
+  for (let i = 0; i < channel_preamp_disable.length; i++) {
+    if (channel_preamp_disable[i] == 0){
+      array.push(i)
+    }
+  }
+  ampEnable.value = array
+}
+
 watch(ampEnable, (value) => {
   const array: Array<number> = Array(nChannels.value).fill(1)
   for (let ch of ampEnable.value){
@@ -28,14 +39,11 @@ watch(ampEnable, (value) => {
 })
 
 watch(slowControl, (value) => {
-  const array: Array<number> = []
-  let channel_preamp_disable = slowControl.value[selectedCard.value].channel_preamp_disable
-  for (let i = 0; i < channel_preamp_disable.length; i++) {
-    if (channel_preamp_disable[i] == 0){
-      array.push(i)
-    }
-  }
-  ampEnable.value = array
+  loadConfiguration()
+})
+
+onMounted(() => {
+  loadConfiguration()
 })
 </script>
 

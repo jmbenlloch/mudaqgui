@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import { useConfigStore } from '../stores/configuration'
 import { storeToRefs } from 'pinia'
@@ -10,6 +10,17 @@ const nChannels = ref(32)
 const store = useConfigStore()
 const { slowControl, disableForms, selectedCard } = storeToRefs(store)
 
+function loadConfiguration(){
+  const array: Array<number> = []
+  let mask = slowControl.value[selectedCard.value].discriminatorMask
+  for (let i = 0; i < mask.length; i++) {
+    if (mask[i] == 1){
+      array.push(i)
+    }
+  }
+  triggerEnable.value = array
+}
+
 watch(triggerEnable, (value) => {
   const array: Array<number> = Array(nChannels.value).fill(0)
   for (let ch of triggerEnable.value) {
@@ -19,14 +30,11 @@ watch(triggerEnable, (value) => {
 })
 
 watch(slowControl, (value) => {
-  const array: Array<number> = []
-  let mask = slowControl.value[selectedCard.value].discriminatorMask
-  for (let i = 0; i < mask.length; i++) {
-    if (mask[i] == 1){
-      array.push(i)
-    }
-  }
-  triggerEnable.value = array
+  loadConfiguration()
+})
+
+onMounted(() => {
+  loadConfiguration()
 })
 </script>
 
