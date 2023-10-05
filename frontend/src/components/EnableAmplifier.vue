@@ -42,6 +42,10 @@ watch(slowControl, (value) => {
   loadConfiguration()
 })
 
+watch(selectedCard, (value) => {
+  loadConfiguration()
+})
+
 onMounted(() => {
   loadConfiguration()
 })
