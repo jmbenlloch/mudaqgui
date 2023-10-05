@@ -77,8 +77,8 @@ watch(channel, (value) => {
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <div class="form-control max-w-xs">
+  <div class="flex flex-col gap-3">
+    <div class="form-control max-w-xs mx-6">
       <label class="label">
         <span class="label-text">Select channel</span>
       </label>

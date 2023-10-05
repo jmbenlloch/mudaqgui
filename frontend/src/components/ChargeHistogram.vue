@@ -82,7 +82,7 @@ watch(chargesRebin, (values) => {
 <template>
   <div class="flex flex-col">
     <!-- @vue-ignore -->
-    <Bar :options="chartOptions" :data="chartData" class="w-full h-36" />
+    <Bar :options="chartOptions" :data="chartData" class="w-full" height="195" />
   </div>
 </template>
 
