@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { Ref } from 'vue'
 import NumericInput from './NumericInput.vue';
 import { useConfigStore } from '../stores/configuration'
@@ -20,12 +20,20 @@ function updateBias(value: number, index: number) {
   slowControl.value[selectedCard.value].input_dac[index] = value
 }
 
-watch(slowControl, (value) => {
+function loadConfiguration(){
   console.log("update values gain")
   gains.value = slowControl.value[selectedCard.value].channel_preamp_HG
   biases.value = slowControl.value[selectedCard.value].input_dac
   console.log(gains.value)
   console.log(biases.value)
+}
+
+watch(slowControl, (value) => {
+  loadConfiguration()
+})
+
+onMounted(() => {
+  loadConfiguration()
 })
 </script>
 
