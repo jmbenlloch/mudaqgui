@@ -174,7 +174,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 
 			// Rebin
 			chargesHistograms = data.chargesRebinned[frame.Source[5]]
-			index := evt.Charges[i] / 4
+			index := evt.Charges[i] / 8
 			//fmt.Println(index, evt.Charges[i])
 			count = chargesHistograms.Charges[i][index]
 			chargesHistograms.Charges[i][index] = count + 1
