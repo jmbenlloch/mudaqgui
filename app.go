@@ -107,6 +107,7 @@ func closeOutputFile(writerData *WriterData) {
 func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	a.dataTaking = true
+	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 	devices := maps.Values(a.data.devices)
 
 	for _, device := range devices {
@@ -123,6 +124,8 @@ func (a *App) StartRun() {
 }
 
 func (a *App) StopRun() {
+	a.dataTaking = false
+	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	// Write remaining events
 	writeData(a.writerData.data, &a.data.events)
@@ -130,8 +133,10 @@ func (a *App) StopRun() {
 	a.data.events = make([]EventData, 0, 10000)
 
 	// Close file and stop data taking
-	closeOutputFile(&a.writerData)
-	a.dataTaking = false
+	if a.dataTaking {
+		// Close the file only once
+		closeOutputFile(&a.writerData)
+	}
 }
 
 func (a *App) HVOn(cardID byte) {
