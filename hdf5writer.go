@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gonum.org/v1/hdf5"
+	"github.com/jmbenlloch/go-hdf5"
 )
 
 type WriterData struct {

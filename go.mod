@@ -3,11 +3,11 @@ module changeme
 go 1.18
 
 require (
+	github.com/jmbenlloch/go-hdf5 v0.0.0-20240425094319-f2e2477556d5
 	github.com/labstack/gommon v0.4.0
 	github.com/mdlayher/packet v1.1.2
 	github.com/wailsapp/wails/v2 v2.6.0
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1
-	gonum.org/v1/hdf5 v0.0.0-20210714002203-8c5d23bc6946
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -39,10 +39,11 @@ require (
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
+	gonum.org/v1/hdf5 v0.0.0-20210714002203-8c5d23bc6946 // indirect
 )
 
 // replace github.com/wailsapp/wails/v2 v2.5.1 => /home/jmbenlloch/go/pkg/mod
 
 //replace github.com/wailsapp/wails/v2 => /home/jmbenlloch/go/wails/v2
 
-replace gonum.org/v1/hdf5 => /home/jmbenlloch/go/hdf5
+//replace gonum.org/v1/hdf5 => /home/jmbenlloch/go/hdf5
