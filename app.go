@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -63,7 +64,8 @@ func (a *App) ScanDevices() {
 }
 
 func getOutputFilename() string {
-	basepath := "/home/jmbenlloch/go/myproject"
+	fmt.Println("MUON DATA:", os.Getenv("MUONDATA"))
+	basepath := os.Getenv("MUONDATA")
 	pattern := filepath.Join(basepath, "muons_run_*.h5")
 	files, _ := filepath.Glob(pattern)
 

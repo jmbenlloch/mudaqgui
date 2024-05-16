@@ -4,6 +4,7 @@ import ConfigurationView from './ConfigurationView.vue';
 import EventsView from './EventsView.vue';
 import ChannelView from './ChannelView.vue';
 import AllChannelsView from './AllChannelsView.vue';
+import CalibrationView from './CalibrationView.vue';
 import Rate from '../components/Rate.vue';
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 </script>
@@ -23,6 +24,7 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Plots</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Single channel</Tab>
             <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">All channels</Tab>
+            <Tab class="tab tab-lg tab-lifted ui-selected:tab-active">Calibration</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -39,6 +41,9 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
             </TabPanel>
             <TabPanel>
               <AllChannelsView />
+            </TabPanel>
+            <TabPanel>
+              <CalibrationView />
             </TabPanel>
           </TabPanels>
         </TabGroup>

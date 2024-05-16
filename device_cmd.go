@@ -11,7 +11,8 @@ import (
 )
 
 func getMacAddressDevice(device byte) net.HardwareAddr {
-	mac := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, device}
+	//mac := net.HardwareAddr{0x00, 0x60, 0x37, 0x12, 0x34, device}
+	mac := net.HardwareAddr{0xdc, 0xa6, 0x32, 0x0e, 0xf9, device}
 	return mac
 }
 
