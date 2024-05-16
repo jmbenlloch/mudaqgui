@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"encoding/csv"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/mdlayher/packet"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -101,6 +104,7 @@ func createOutputFile(writerData *WriterData) {
 }
 
 func closeOutputFile(writerData *WriterData) {
+	fmt.Println("closing output file")
 	writerData.file.Close()
 	writerData.data.Close()
 	writerData.charges.Close()
@@ -126,7 +130,6 @@ func (a *App) StartRun() {
 }
 
 func (a *App) StopRun() {
-	a.dataTaking = false
 	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	// Write remaining events
@@ -139,6 +142,7 @@ func (a *App) StopRun() {
 		// Close the file only once
 		closeOutputFile(&a.writerData)
 	}
+	a.dataTaking = false
 }
 
 func (a *App) HVOn(cardID byte) {
@@ -188,13 +192,32 @@ func (a *App) UpdateGlobalConfig(slowControl map[byte]map[string]any, probe map[
 }
 
 func (a *App) SelectConfigFile() string {
+	directory, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
 	options := runtime.SaveDialogOptions{
-		DefaultDirectory:           "/home/jmbenlloch/go/myproject",
+		DefaultDirectory:           directory,
 		DefaultFilename:            "config.yaml",
 		Title:                      "Select file to save configuration",
 		TreatPackagesAsDirectories: true,
 	}
 	file, _ := runtime.SaveFileDialog(a.ctx, options)
+	return file
+}
+
+func (a *App) SelectCalibrationFile() string {
+	directory, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+	}
+	options := runtime.OpenDialogOptions{
+		DefaultDirectory:           directory,
+		DefaultFilename:            "config.yaml",
+		Title:                      "Select file to save configuration",
+		TreatPackagesAsDirectories: true,
+	}
+	file, _ := runtime.OpenFileDialog(a.ctx, options)
 	return file
 }
 
@@ -207,6 +230,100 @@ func (a *App) LoadConfiguration(file string) {
 	fmt.Println("file read")
 	sendConfigToUI(&a.data, a.ctx)
 	fmt.Println("event sent")
+}
+
+type CalibrationConfig struct {
+	Duration int
+	Events   int
+	Bias     int
+	Gain     int
+	Dac      int
+}
+
+type CalibrationLog struct {
+	Timestamp     int
+	Configuration CalibrationConfig
+}
+
+func (a *App) LoadCalibrationFile(filename string) {
+	fmt.Println(filename)
+
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatal("Error while reading the file", err)
+	}
+
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	records, err := reader.ReadAll()
+
+	// Checks for the error
+	if err != nil {
+		fmt.Println("Error reading records")
+	}
+
+	// Loop to iterate through
+	// and print each of the string slice
+	for index, record := range records {
+		fmt.Println(record)
+		if index > 0 {
+
+			duration, err := strconv.Atoi(record[0])
+			if err != nil {
+				fmt.Println("error reading calibration file")
+			}
+			events, err := strconv.Atoi(record[1])
+			if err != nil {
+				fmt.Println("error reading calibration file")
+			}
+			bias, err := strconv.Atoi(record[2])
+			if err != nil {
+				fmt.Println("error reading calibration file")
+			}
+			gain, err := strconv.Atoi(record[3])
+			if err != nil {
+				fmt.Println("error reading calibration file")
+			}
+			dac, err := strconv.Atoi(record[4])
+			if err != nil {
+				fmt.Println("error reading calibration file")
+			}
+			config := CalibrationConfig{
+				Duration: duration,
+				Events:   events,
+				Bias:     bias,
+				Gain:     gain,
+				Dac:      dac,
+			}
+			fmt.Println(config)
+
+			for card, configuration := range a.data.slowControlConfiguration {
+				configuration["dac1_code"] = config.Dac
+				configuration["dac2_code"] = config.Dac
+
+				gains := make([]int, 32)
+				for i := range gains {
+					gains[i] = config.Gain
+				}
+				biases := make([]int, 32)
+				for i := range biases {
+					biases[i] = config.Bias
+				}
+				configuration["channel_preamp_HG"] = gains
+				configuration["input_dac"] = biases
+
+				fmt.Println(card, configuration)
+			}
+
+			runtime.EventsEmit(a.ctx, "configSlowControl", a.data.slowControlConfiguration)
+			a.UpdateGlobalConfig(a.data.slowControlConfiguration, a.data.probeConfiguration)
+			runtime.EventsEmit(a.ctx, "calibration", CalibrationLog{Timestamp: int(time.Now().Unix()), Configuration: config})
+			a.StartRun()
+			time.Sleep(time.Duration(config.Duration) * time.Second)
+			a.StopRun()
+		}
+	}
 }
 
 func (a *App) GetNetworkInterfaces() []string {

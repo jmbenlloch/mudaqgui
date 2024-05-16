@@ -14,6 +14,10 @@ export function HVOn(arg1) {
   return window['go']['main']['App']['HVOn'](arg1);
 }
 
+export function LoadCalibrationFile(arg1) {
+  return window['go']['main']['App']['LoadCalibrationFile'](arg1);
+}
+
 export function LoadConfiguration(arg1) {
   return window['go']['main']['App']['LoadConfiguration'](arg1);
 }
@@ -24,6 +28,10 @@ export function SaveConfiguration(arg1) {
 
 export function ScanDevices() {
   return window['go']['main']['App']['ScanDevices']();
+}
+
+export function SelectCalibrationFile() {
+  return window['go']['main']['App']['SelectCalibrationFile']();
 }
 
 export function SelectConfigFile() {
