@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 type BitPosition struct {
@@ -62,6 +63,10 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 	bytearray := make([]byte, bit_length/8)
 
 	for key, values := range configuration {
+		//if (key != "dac1_code") && (key != "dac2_code") {
+		//	continue
+		//}
+
 		fmt.Println(key, values)
 		fmt.Println(key, bitPositions[key])
 
@@ -108,6 +113,23 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 			start := bitPositions[key].starts[0]
 			length := bitPositions[key].length
 			updateByteArray(v.Int(), start, length, bytearray)
+		case reflect.Float64:
+			fmt.Println("float!")
+			testValue := v.Interface()
+			testValue2, _ := testValue.(float64)
+			testValue3 := int64(testValue2)
+			fmt.Println("value: ", testValue3)
+			start := bitPositions[key].starts[0]
+			length := bitPositions[key].length
+			updateByteArray(testValue3, start, length, bytearray)
+		case reflect.String:
+			fmt.Println("string!")
+			testValue := v.String()
+			testValue2, _ := strconv.Atoi(testValue)
+			fmt.Println("value: ", testValue2)
+			start := bitPositions[key].starts[0]
+			length := bitPositions[key].length
+			updateByteArray(int64(testValue2), start, length, bytearray)
 		}
 	}
 	return bytearray
@@ -273,25 +295,28 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"dac1":                   1,
 		"enable_dac2":            1,
 		"dac2":                   1,
-		"dac1_code":              250,
-		"dac2_code":              250,
-		"enable_HG_OTA":          1,
-		"HG_OTA":                 1,
-		"enable_LG_OTA":          1,
-		"LG_OTA":                 1,
-		"enable_probe_OTA":       1,
-		"probe_OTA":              1,
-		"testb_OTA":              0,
-		"enable_val_evt":         0,
-		"val_evt":                0,
-		"enable_raz_chn":         0,
-		"raz_chn":                0,
-		"enable_out_dig":         0,
-		"enable_or32":            0,
-		"enable_nor32_oc":        0,
-		"trigger_polarity":       0,
-		"enable_bor32t_oc":       0,
-		"enable_32_triggers":     1,
+
+		"dac1_code": 250,
+		"dac2_code": 250,
+
+		"enable_HG_OTA":    1,
+		"HG_OTA":           1,
+		"enable_LG_OTA":    1,
+		"LG_OTA":           1,
+		"enable_probe_OTA": 1,
+		"probe_OTA":        1,
+		"testb_OTA":        0,
+		"enable_val_evt":   0,
+		"val_evt":          0,
+
+		"enable_raz_chn":     0,
+		"raz_chn":            0,
+		"enable_out_dig":     0,
+		"enable_or32":        0,
+		"enable_nor32_oc":    0,
+		"trigger_polarity":   0,
+		"enable_bor32t_oc":   0,
+		"enable_32_triggers": 1,
 	}
 	return slowControlRegister
 }
