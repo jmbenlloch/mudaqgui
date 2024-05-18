@@ -197,8 +197,8 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"dac_t": [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		//"dac_t":                  [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		//"dac_t":                  [32]int{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
-		//"dac":                    [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		"dac": [32]int{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
+		"dac": [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		//"dac": [32]int{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
 		//		"enableDiscriminator":  1,
 		//		"discriminator":        1,
 		//		"RS_or_discriminator":  0,
@@ -219,8 +219,9 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"enable_4b_dac_t":      1,
 		"dac4b_t":              1,
 
-		//"discriminatorMask": [32]int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-		"discriminatorMask":      [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		"discriminatorMask": [32]int{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		//"discriminatorMask":      [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+
 		"HG_trackHold":           1,
 		"enable_HG_trackHold":    1,
 		"LH_trackHold":           1,
@@ -239,7 +240,8 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"fastShaper":             1,
 		"LG_slowShaper":          1,
 		"enable_LG_slowShaper":   1,
-		"timeConstant_LG_shaper": 6,
+		"timeConstant_LG_shaper": 0,
+
 		"HG_slowShaper":          1,
 		"enable_HG_slowShaper":   1,
 		"timeConstant_HG_shaper": 6,
