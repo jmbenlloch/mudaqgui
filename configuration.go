@@ -241,10 +241,10 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"LG_slowShaper":          1,
 		"enable_LG_slowShaper":   1,
 		"timeConstant_LG_shaper": 0,
-
 		"HG_slowShaper":          1,
 		"enable_HG_slowShaper":   1,
-		"timeConstant_HG_shaper": 6,
+		"timeConstant_HG_shaper": 0,
+
 		"LG_preamp_bias":         0,
 		"HG_preamp":              1,
 		"enable_HG_praemp":       1,
