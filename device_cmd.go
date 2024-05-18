@@ -4,9 +4,10 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
+	"os"
+	"reflect"
 	"time"
 
-	"github.com/labstack/gommon/log"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -157,10 +158,34 @@ func sendSlowControlConfiguration(configuration map[string]any, src net.Hardware
 
 func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+9)
-	mask, ok := slowControlConfiguration["discriminatorMask"].([32]int)
-	if !ok {
-		log.Info("error")
+	values := slowControlConfiguration["discriminatorMask"]
+	fmt.Println("mask ", values)
+	v := reflect.ValueOf(values)
+	fmt.Println("type: ", v.Kind())
+	fmt.Println("value: ", v)
+	fmt.Println("values: ", values)
+
+	mask := [32]int{}
+
+	switch v.Kind() {
+	case reflect.Array:
+		fmt.Println("configuration error FIL!")
+		os.Exit(0)
+	case reflect.Slice:
+		fmt.Println("slice!")
+		for i := 0; i < v.Len(); i++ {
+			value := v.Index(i).Interface()
+			valueFloat, _ := value.(float64)
+			valueInt := int(valueFloat)
+			fmt.Println("testvalue: ", valueFloat)
+			fmt.Println("testvalue3: ", valueInt)
+			//v := reflect.ValueOf(value)
+			//fmt.Println("type 2: ", v.Kind())
+			mask[31-i] = valueInt
+		}
 	}
+
+	fmt.Println("mask ", mask)
 	binaryMask := convertToBinary(mask)
 	bits := uint32ToByteArray(binaryMask)
 	copy(payload[0:2], []byte{0x00, 0x00}) //
@@ -171,8 +196,8 @@ func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, 
 
 func updateCardConfig(card byte, data *DaqData, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
-	//sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
-	//sendFPGAFil(data.slowControlConfiguration[card], src, dst, sendChannel)
+	sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
+	sendFPGAFil(data.slowControlConfiguration[card], src, dst, sendChannel)
 }
 
 func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
