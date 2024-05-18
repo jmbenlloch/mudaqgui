@@ -139,6 +139,8 @@ func sendProbeConfiguration(configuration map[string]any, src net.HardwareAddr, 
 
 func sendSlowControlConfiguration(configuration map[string]any, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	payload := make([]byte, 2+(1144/8))
+	fmt.Println(configuration)
+	fmt.Println(citirocSlowControlBitPosition)
 	configurationBytes := configurationToByteArray(1144, configuration, citirocSlowControlBitPosition)
 
 	for i, value := range configurationBytes {
@@ -169,8 +171,8 @@ func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, 
 
 func updateCardConfig(card byte, data *DaqData, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {
 	sendSlowControlConfiguration(data.slowControlConfiguration[card], src, dst, sendChannel)
-	sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
-	sendFPGAFil(data.slowControlConfiguration[card], src, dst, sendChannel)
+	//sendProbeConfiguration(data.probeConfiguration[card], src, dst, sendChannel)
+	//sendFPGAFil(data.slowControlConfiguration[card], src, dst, sendChannel)
 }
 
 func setVCXO(vcxoValue uint16, src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Frame) {

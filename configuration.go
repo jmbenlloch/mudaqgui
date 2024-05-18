@@ -43,7 +43,8 @@ func makeRangeStep(start, end, step int) []int {
 }
 
 func updateByteArray(value int64, start, length int, bytearray []byte) {
-	fmt.Printf("value: %v\n", value)
+	//fmt.Printf("value: %v\n", value)
+	fmt.Printf("value: %v, start: %v, length: %v, bytearray: %v\n", value, start, length, bytearray)
 	for idx := 0; idx < length; idx++ {
 		position := start + idx
 		arrayPosition := len(bytearray) - (position / 8) - 1
@@ -65,8 +66,9 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 		fmt.Println(key, bitPositions[key])
 
 		v := reflect.ValueOf(values)
-		fmt.Println(v.Kind())
-		fmt.Println(v)
+		fmt.Println("type: ", v.Kind())
+		fmt.Println("value: ", v)
+		fmt.Println("values: ", values)
 
 		switch v.Kind() {
 		case reflect.Array:
@@ -75,6 +77,31 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 			for i := 0; i < v.Len(); i++ {
 				start := bitPositions[key].starts[i]
 				updateByteArray(v.Index(i).Int(), start, length, bytearray)
+			}
+		case reflect.Slice:
+			fmt.Println("slice!")
+			length := bitPositions[key].length
+			fmt.Println("slice length: ", length)
+
+			valuesCasted, _ := values.([]int)
+			fmt.Println("valuesCasted: ", valuesCasted)
+			for i := 0; i < v.Len(); i++ {
+				fmt.Println("i: ", i)
+				start := bitPositions[key].starts[i]
+				fmt.Println("start: ", start)
+				fmt.Println("value: ", v.Index(i))
+				fmt.Println("value: ", v.Index(i).Interface())
+				testValue := v.Index(i).Interface()
+				testValue2, _ := testValue.(float64)
+				testValue3 := int64(testValue2)
+				fmt.Println("testvalue: ", testValue2)
+				fmt.Println("testvalue3: ", testValue3)
+
+				v := reflect.ValueOf(testValue)
+				fmt.Println("type 2: ", v.Kind())
+				//fmt.Println("value from values: ", valuesCasted[i])
+				//updateByteArray(v.Index(i).Int(), start, length, bytearray)
+				updateByteArray(testValue3, start, length, bytearray)
 			}
 		case reflect.Int:
 			fmt.Println("integer!")
@@ -167,18 +194,33 @@ var citirocSlowControlBitPosition = map[string]BitPosition{
 
 func createDefaultSlowControlConfiguration() map[string]any {
 	var slowControlRegister = map[string]any{
-		"dac_t":                  [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		"dac":                    [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		"enableDiscriminator":    1,
-		"discriminator":          1,
-		"RS_or_discriminator":    0,
-		"enableDiscriminatorT":   1,
-		"discriminatorT":         1,
-		"enable_4b_dac":          1,
-		"dac4b":                  1,
-		"enable_4b_dac_t":        1,
-		"dac4b_t":                1,
-		"discriminatorMask":      [32]int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		"dac_t": [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		//"dac_t":                  [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+		//"dac_t":                  [32]int{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
+		//"dac":                    [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		"dac": [32]int{15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15},
+		//		"enableDiscriminator":  1,
+		//		"discriminator":        1,
+		//		"RS_or_discriminator":  0,
+		//		"enableDiscriminatorT": 1,
+		//		"discriminatorT":       1,
+		//		"enable_4b_dac":        1,
+		//		"dac4b":                1,
+		//		"enable_4b_dac_t":      1,
+		//		"dac4b_t":              1,
+
+		"enableDiscriminator":  1,
+		"discriminator":        1,
+		"RS_or_discriminator":  0,
+		"enableDiscriminatorT": 1,
+		"discriminatorT":       1,
+		"enable_4b_dac":        1,
+		"dac4b":                1,
+		"enable_4b_dac_t":      1,
+		"dac4b_t":              1,
+
+		//"discriminatorMask": [32]int{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		"discriminatorMask":      [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 		"HG_trackHold":           1,
 		"enable_HG_trackHold":    1,
 		"LH_trackHold":           1,

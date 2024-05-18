@@ -49,7 +49,7 @@ onMounted(() => {
       <div class="form-control" v-for="n in nChannels">
         <label class="label cursor-pointer">
           <input v-model="triggerEnable" type="checkbox" class="checkbox checkbox-xs" :value="n - 1" :disabled="disableForms"/>
-          <span class="label-text">Ch {{ n }}</span>
+          <span class="label-text">Ch {{ n - 1}}</span>
         </label>
       </div>
     </div>
