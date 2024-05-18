@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"strconv"
 )
@@ -130,6 +131,9 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 			start := bitPositions[key].starts[0]
 			length := bitPositions[key].length
 			updateByteArray(int64(testValue2), start, length, bytearray)
+		default:
+			fmt.Println("configuration error!!")
+			os.Exit(1)
 		}
 	}
 	return bytearray
@@ -276,25 +280,24 @@ func createDefaultSlowControlConfiguration() map[string]any {
 		"enable_input_DAC": 1,
 		"dac8_reference":   1,
 
-		//	"input_dac":              [32]int{198, 203, 188, 202, 192, 203, 191, 202, 203, 203, 193, 197, 191, 201, 193, 205, 204, 190, 198, 195, 191, 193, 197, 192, 194, 185, 187, 192, 191, 195, 188, 198},
 		"input_dac": [32]int{198, 203, 188, 202, 192, 203, 191, 202, 203, 203, 193, 197, 191, 201, 193, 77, 204, 190, 198, 195, 191, 193, 197, 192, 194, 185, 187, 192, 191, 195, 188, 198},
 
 		"input_dac_on": [32]int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		//"input_dac_on": [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 
 		"channel_preamp_HG":      [32]int{51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51},
 		"channel_preamp_LG":      [32]int{47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47, 47},
 		"channel_Ctest_HG":       [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		"channel_Ctest_LG":       [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		"channel_preamp_disable": [32]int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		"temperature":            1,
-		"enableTemperature":      1,
-		"bandgap":                1,
-		"enable_bandgap":         1,
-		"enable_dac1":            1,
-		"dac1":                   1,
-		"enable_dac2":            1,
-		"dac2":                   1,
+
+		"temperature":       1,
+		"enableTemperature": 1,
+		"bandgap":           1,
+		"enable_bandgap":    1,
+		"enable_dac1":       1,
+		"dac1":              1,
+		"enable_dac2":       1,
+		"dac2":              1,
 
 		"dac1_code": 250,
 		"dac2_code": 250,
