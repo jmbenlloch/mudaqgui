@@ -98,8 +98,8 @@ func readData(src net.HardwareAddr, dst net.HardwareAddr, sendChannel chan *Fram
 func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel chan *Frame, a *App) {
 	counter := 0
 	for a.dataTaking {
-		//fmt.Println(a.dataTaking)
-		//fmt.Printf("len channel: %v\n", len(sendChannel))
+		fmt.Println(a.dataTaking)
+		fmt.Printf("len channel: %v\n", len(sendChannel))
 		time.Sleep(50 * time.Millisecond)
 		for _, dst := range devices {
 			getRate(src, *dst, sendChannel)
@@ -169,8 +169,24 @@ func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, 
 
 	switch v.Kind() {
 	case reflect.Array:
-		fmt.Println("configuration error FIL!")
-		os.Exit(0)
+		for i := 0; i < v.Len(); i++ {
+			value := v.Index(i).Interface()
+			valueR := reflect.ValueOf(value)
+			var valueInt int
+			fmt.Println("type 2: ", valueR.Kind())
+			switch valueR.Kind() {
+			case reflect.Float64:
+				valueFloat, _ := value.(float64)
+				valueInt = int(valueFloat)
+			case reflect.Int:
+				valueInt, _ = value.(int)
+			default:
+				fmt.Println("error on FIL config")
+				os.Exit(1)
+			}
+			fmt.Println("testvalue3: ", valueInt)
+			mask[31-i] = valueInt
+		}
 	case reflect.Slice:
 		fmt.Println("slice!")
 		for i := 0; i < v.Len(); i++ {

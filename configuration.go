@@ -132,7 +132,7 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 			length := bitPositions[key].length
 			updateByteArray(int64(testValue2), start, length, bytearray)
 		default:
-			fmt.Println("configuration error!!")
+			fmt.Println("configuration error!! ", v.Kind())
 			os.Exit(1)
 		}
 	}

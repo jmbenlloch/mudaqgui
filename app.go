@@ -130,7 +130,6 @@ func (a *App) StartRun() {
 }
 
 func (a *App) StopRun() {
-	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 	stopRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	// Write remaining events
 	writeData(a.writerData.data, &a.data.events)
@@ -143,6 +142,7 @@ func (a *App) StopRun() {
 		closeOutputFile(&a.writerData)
 	}
 	a.dataTaking = false
+	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 }
 
 func (a *App) HVOn(cardID byte) {
