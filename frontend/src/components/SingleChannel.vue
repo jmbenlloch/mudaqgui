@@ -21,7 +21,7 @@ const nChannels: Ref<number> = ref(32)
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
 const chartData: Ref<ChartData> = ref({
-  labels: range(0, 128),
+  labels: range(0, 4096, 32),
   datasets: [{
     // @ts-ignore
     data: [],
@@ -43,13 +43,18 @@ const chartOptions: Ref<ChartOptions> = ref({
   },
   scales: {
     x: {
-      title : {
+      title: {
         display: true,
         text: "Charge (ADC counts)",
       },
+      ticks: {
+        callback: function (value, index, ticks) {
+          return index * 32; // rebin factor
+        }
+      },
     },
     y: {
-      title : {
+      title: {
         display: true,
         text: "# Events",
       },
@@ -59,7 +64,7 @@ const chartOptions: Ref<ChartOptions> = ref({
 
 function updatePlot() {
   chartData.value = {
-    labels: range(0, 128),
+    labels: range(0, 4096, 32),
     datasets: [{
       data: charges.value[selectedCard.value].Charges[channel.value],
       backgroundColor: '#f87979',
@@ -91,4 +96,3 @@ watch(channel, (value) => {
     <Bar :options="chartOptions" :data="chartData" width="1200" />
   </div>
 </template>
-

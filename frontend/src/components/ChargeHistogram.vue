@@ -25,7 +25,7 @@ const props = defineProps({
 function createDataObject(): ChartData {
   let result: ChartData = {
     //    labels: range(0, 1024),
-    labels: range(0, 32),
+    labels: range(0, 4096, 128),
     datasets: [{
       data: chargesRebin.value[selectedCard.value].Charges[props.channel],
       backgroundColor: '#f87979',
@@ -56,7 +56,7 @@ const chartOptions: Ref<ChartOptions<'bar'>> = ref({
       },
       ticks: {
         callback: function(value, index, ticks) {
-          return index*8; // rebin factor
+          return index*128; // rebin factor
         }
       },
     },
