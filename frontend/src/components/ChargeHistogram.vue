@@ -25,7 +25,7 @@ const props = defineProps({
 function createDataObject(): ChartData {
   let result: ChartData = {
     //    labels: range(0, 1024),
-    labels: range(0, 128),
+    labels: range(0, 32),
     datasets: [{
       data: chargesRebin.value[selectedCard.value].Charges[props.channel],
       backgroundColor: '#f87979',

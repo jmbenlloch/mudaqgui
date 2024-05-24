@@ -122,7 +122,7 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 
 func initialize_charge_histograms(card byte, data *DaqData) {
 	data.charges[card] = *create_charge_histograms(4096)
-	data.chargesRebinned[card] = *create_charge_histograms(128)
+	data.chargesRebinned[card] = *create_charge_histograms(32)
 }
 
 func create_charge_histograms(nbins int) *ChargeHistogram {
@@ -176,7 +176,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 
 			// Rebin
 			chargesHistograms = data.chargesRebinned[frame.Source[5]]
-			index := evt.Charges[i] / 32
+			index := evt.Charges[i] / 128
 			//fmt.Println(index, evt.Charges[i])
 			count = chargesHistograms.Charges[i][index]
 			chargesHistograms.Charges[i][index] = count + 1
