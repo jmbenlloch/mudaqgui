@@ -114,6 +114,7 @@ func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel
 				runtime.EventsEmit(a.ctx, "chargesRebin", a.data.chargesRebinned)
 				runtime.EventsEmit(a.ctx, "lostBuffer", a.data.lostBuffer)
 				runtime.EventsEmit(a.ctx, "lostFPGA", a.data.lostFGPA)
+				runtime.EventsEmit(a.ctx, "nEvents", a.data.nEvents)
 			}
 			counter = counter + 1
 		}

@@ -113,6 +113,7 @@ func closeOutputFile(writerData *WriterData) {
 func (a *App) StartRun() {
 	startRun(a.iface.HardwareAddr, a.sendFrameChannel)
 	a.dataTaking = true
+	a.data.nEvents = 0
 	runtime.EventsEmit(a.ctx, "dataTaking", a.dataTaking)
 	devices := maps.Values(a.data.devices)
 

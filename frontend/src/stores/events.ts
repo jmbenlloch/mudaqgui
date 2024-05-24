@@ -24,6 +24,7 @@ export const useEventStore = defineStore('events', () => {
   const t1s_backend: Ref<TimeData> = ref({})
 
   const dataTaking: Ref<boolean> = ref(false)
+  const nEvents: Ref<number> = ref(0)
 
   const t0 = computed(() => {
     let t0s: { [index: string]: Array<Point> } = {}
@@ -75,6 +76,11 @@ export const useEventStore = defineStore('events', () => {
     dataTaking.value = data
   })
 
+  EventsOn("nEvents", (data) => {
+    //console.log("nEvents", data)
+    nEvents.value = data
+  })
+
   const charges: Ref<ChargeHistogram> = ref({
     1024: {
       Charges: Array(32).fill(Array(4096).fill(0)),
@@ -100,5 +106,5 @@ export const useEventStore = defineStore('events', () => {
     },
   })
 
-  return { t0, t1, charges, chargesRebin, dataTaking }
+  return { t0, t1, charges, chargesRebin, dataTaking, nEvents }
 })

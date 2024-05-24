@@ -29,6 +29,7 @@ type DaqData struct {
 	t1s                      map[byte][]uint32
 	lostBuffer               map[byte]uint32
 	lostFGPA                 map[byte]uint32
+	nEvents                  int
 }
 
 type EventData struct {
@@ -144,6 +145,7 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 	for data_start < len(frame.Payload)-2 {
 		//log.Printf("reading: %d - %d Len: %d", data_start, data_start+packet_size, len(frame.Payload))
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
+		data.nEvents++
 		data_start += packet_size
 
 		//data.events[frame.Source[5]] = append(data.events[frame.Source[5]], *evt)
