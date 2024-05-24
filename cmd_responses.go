@@ -154,8 +154,8 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 
 		nEvts := len(data.t0s[evt.card])
 		start := 0
-		if (nEvts - 1000) > 0 {
-			start = nEvts - 1000
+		if (nEvts - 200) > 0 {
+			start = nEvts - 200
 		}
 		data.t0s[evt.card] = append(data.t0s[evt.card][start:], evt.T0)
 		data.t1s[evt.card] = append(data.t1s[evt.card][start:], evt.T1)
