@@ -327,7 +327,7 @@ func (a *App) LoadCalibrationFile(filename string) {
 			a.StopRun()
 		}
 	}
-	runtime.EventsEmit(a.ctx, "calibration", CalibrationLog{Timestamp: int(time.Now().Unix()), Configuration: CalibrationConfig{Finished: true}})
+	runtime.EventsEmit(a.ctx, "calibrationFginished", true)
 }
 
 func (a *App) GetNetworkInterfaces() []string {

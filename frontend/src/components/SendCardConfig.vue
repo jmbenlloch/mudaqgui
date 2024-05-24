@@ -7,7 +7,7 @@ const store = useConfigStore()
 const { slowControl, probe, selectedCard, disableForms } = storeToRefs(store)
 
 function updateConfigFromUI() {
-  UpdateCardConfig(selectedCard.value, slowControl.value, probe.value).then(() => {
+  UpdateCardConfig(selectedCard.value, slowControl.value[selectedCard.value], probe.value[selectedCard.value]).then(() => {
     console.log("test param")
   });
 }
