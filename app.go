@@ -239,6 +239,7 @@ type CalibrationConfig struct {
 	Bias     int
 	Gain     int
 	Dac      int
+	Finished bool
 }
 
 type CalibrationLog struct {
@@ -326,6 +327,7 @@ func (a *App) LoadCalibrationFile(filename string) {
 			a.StopRun()
 		}
 	}
+	runtime.EventsEmit(a.ctx, "calibration", CalibrationLog{Timestamp: int(time.Now().Unix()), Configuration: CalibrationConfig{Finished: true}})
 }
 
 func (a *App) GetNetworkInterfaces() []string {

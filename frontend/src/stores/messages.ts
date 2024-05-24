@@ -16,6 +16,7 @@ export type CalibrationConfig = {
     Bias: number,
     Gain: number,
     Dac: number,
+    Finished: boolean,
 };
 
 export type MessageType = {
