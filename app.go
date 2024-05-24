@@ -323,7 +323,22 @@ func (a *App) LoadCalibrationFile(filename string) {
 			time.Sleep(1 * time.Second)
 			runtime.EventsEmit(a.ctx, "calibration", CalibrationLog{Timestamp: int(time.Now().Unix()), Configuration: config})
 			a.StartRun()
-			time.Sleep(time.Duration(config.Duration) * time.Second)
+
+			timerTotal := time.NewTimer(time.Duration(config.Duration) * time.Second)
+			ticker := time.NewTicker(time.Second)
+
+			done := false
+			for !done {
+				select {
+				case <-timerTotal.C:
+					done = true
+				case t := <-ticker.C:
+					fmt.Println("Tick at", t)
+					if a.data.nEvents > config.Events {
+						done = true
+					}
+				}
+			}
 			a.StopRun()
 		}
 	}

@@ -25,7 +25,7 @@ const { messages } = storeToRefs(store)
     <div class="bg-gray-200 m-4 overflow-scroll">
       <p v-for="message in messages" class="mx-2 my-1">
         <span v-if="!message.Configuration.Finished"> {{ parseTimestamp(message.Timestamp) }} - Taking data during {{
-        message.Configuration.Duration }} seconds. Bias {{ message.Configuration.Bias }}, gain {{
+        message.Configuration.Duration }} seconds or {{ message.Configuration.Events }} events. Bias {{ message.Configuration.Bias }}, gain {{
         message.Configuration.Gain }}, DAC {{ message.Configuration.Dac }} </span>
 
         <span v-if="message.Configuration.Finished"> {{ parseTimestamp(message.Timestamp) }} - Calibration finished</span>
