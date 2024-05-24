@@ -83,6 +83,7 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 			for i := 0; i < v.Len(); i++ {
 				start := bitPositions[key].starts[i]
 				updateByteArray(v.Index(i).Int(), start, length, bytearray)
+				// If needed, parsed floats and strings as well
 			}
 		case reflect.Slice:
 			fmt.Println("slice!")
@@ -98,13 +99,26 @@ func configurationToByteArray(length int, configuration map[string]any, bitPosit
 				fmt.Println("value: ", v.Index(i))
 				fmt.Println("value: ", v.Index(i).Interface())
 				testValue := v.Index(i).Interface()
-				testValue2, _ := testValue.(float64)
-				testValue3 := int64(testValue2)
-				fmt.Println("testvalue: ", testValue2)
-				fmt.Println("testvalue3: ", testValue3)
+				testValueR := reflect.ValueOf(testValue)
+				fmt.Println("type 2: ", testValueR.Kind())
 
-				v := reflect.ValueOf(testValue)
-				fmt.Println("type 2: ", v.Kind())
+				var testValue3 int64
+				switch testValueR.Kind() {
+				case reflect.Int:
+					testValue4, _ := testValue.(int)
+					testValue3 = int64(testValue4)
+				case reflect.Float64:
+					testValue2, _ := testValue.(float64)
+					testValue3 = int64(testValue2)
+				case reflect.String:
+					testValue2, _ := testValue.(string)
+					testValue4, _ := strconv.Atoi(testValue2)
+					testValue3 = int64(testValue4)
+					fmt.Println("value: ", testValue3)
+				default:
+					fmt.Println("Error on configuration ", testValueR.Kind())
+					os.Exit(1)
+				}
 				//fmt.Println("value from values: ", valuesCasted[i])
 				//updateByteArray(v.Index(i).Int(), start, length, bytearray)
 				updateByteArray(testValue3, start, length, bytearray)

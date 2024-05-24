@@ -318,6 +318,7 @@ func (a *App) LoadCalibrationFile(filename string) {
 
 			runtime.EventsEmit(a.ctx, "configSlowControl", a.data.slowControlConfiguration)
 			a.UpdateGlobalConfig(a.data.slowControlConfiguration, a.data.probeConfiguration)
+			time.Sleep(1 * time.Second)
 			runtime.EventsEmit(a.ctx, "calibration", CalibrationLog{Timestamp: int(time.Now().Unix()), Configuration: config})
 			a.StartRun()
 			time.Sleep(time.Duration(config.Duration) * time.Second)

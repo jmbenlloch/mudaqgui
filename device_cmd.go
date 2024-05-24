@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"reflect"
+	"strconv"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -180,8 +181,11 @@ func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, 
 				valueInt = int(valueFloat)
 			case reflect.Int:
 				valueInt, _ = value.(int)
+			case reflect.String:
+				valueParsed, _ := value.(string)
+				valueInt, _ = strconv.Atoi(valueParsed)
 			default:
-				fmt.Println("error on FIL config")
+				fmt.Println("error on FIL config array ", valueR.Kind())
 				os.Exit(1)
 			}
 			fmt.Println("testvalue3: ", valueInt)
@@ -191,9 +195,24 @@ func sendFPGAFil(slowControlConfiguration map[string]any, src net.HardwareAddr, 
 		fmt.Println("slice!")
 		for i := 0; i < v.Len(); i++ {
 			value := v.Index(i).Interface()
-			valueFloat, _ := value.(float64)
-			valueInt := int(valueFloat)
-			fmt.Println("testvalue: ", valueFloat)
+			valueR := reflect.ValueOf(value)
+
+			var valueInt int
+
+			switch valueR.Kind() {
+			case reflect.Float64:
+				valueFloat, _ := value.(float64)
+				valueInt = int(valueFloat)
+			case reflect.Int:
+				valueInt, _ = value.(int)
+			case reflect.String:
+				valueParsed, _ := value.(string)
+				valueInt, _ = strconv.Atoi(valueParsed)
+			default:
+				fmt.Println("error on FIL config slice ", valueR.Kind())
+				os.Exit(1)
+			}
+
 			fmt.Println("testvalue3: ", valueInt)
 			//v := reflect.ValueOf(value)
 			//fmt.Println("type 2: ", v.Kind())
