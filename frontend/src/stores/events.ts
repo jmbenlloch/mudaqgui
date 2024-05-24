@@ -83,14 +83,14 @@ export const useEventStore = defineStore('events', () => {
 
   const charges: Ref<ChargeHistogram> = ref({
     1024: {
-      Charges: Array(32).fill(Array(4096).fill(0)),
+      Charges: Array(32).fill(Array(128).fill(0)),
     },
 
     85: {
-      Charges: Array(32).fill(Array(4096).fill(0)),
+      Charges: Array(32).fill(Array(128).fill(0)),
     },
     69: {
-      Charges: Array(32).fill(Array(4096).fill(0)),
+      Charges: Array(32).fill(Array(128).fill(0)),
     },
   })
 

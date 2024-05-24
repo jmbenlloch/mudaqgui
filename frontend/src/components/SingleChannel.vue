@@ -21,7 +21,7 @@ const nChannels: Ref<number> = ref(32)
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
 
 const chartData: Ref<ChartData> = ref({
-  labels: range(0, 4096),
+  labels: range(0, 128),
   datasets: [{
     // @ts-ignore
     data: [],
@@ -59,7 +59,7 @@ const chartOptions: Ref<ChartOptions> = ref({
 
 function updatePlot() {
   chartData.value = {
-    labels: range(0, 4096),
+    labels: range(0, 128),
     datasets: [{
       data: charges.value[selectedCard.value].Charges[channel.value],
       backgroundColor: '#f87979',
