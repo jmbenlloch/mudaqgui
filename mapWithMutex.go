@@ -22,6 +22,8 @@ func (c *mapWithMyutex[K, V]) write(variable K, value V) {
 }
 
 func (c *mapWithMyutex[K, V]) copyMap() map[K]V {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	newMap := make(map[K]V)
 	for key, value := range c.internalMap {
 		newMap[key] = value
