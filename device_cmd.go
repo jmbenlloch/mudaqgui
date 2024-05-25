@@ -107,13 +107,13 @@ func readAllCards(src net.HardwareAddr, devices []*net.HardwareAddr, sendChannel
 			readData(src, *dst, sendChannel)
 
 			if counter%20 == 0 {
-				runtime.EventsEmit(a.ctx, "rate", a.data.rates)
-				runtime.EventsEmit(a.ctx, "t0s", a.data.t0s)
-				runtime.EventsEmit(a.ctx, "t1s", a.data.t1s)
-				runtime.EventsEmit(a.ctx, "charges", a.data.charges)
-				runtime.EventsEmit(a.ctx, "chargesRebin", a.data.chargesRebinned)
-				runtime.EventsEmit(a.ctx, "lostBuffer", a.data.lostBuffer)
-				runtime.EventsEmit(a.ctx, "lostFPGA", a.data.lostFGPA)
+				runtime.EventsEmit(a.ctx, "rate", a.data.rates.copyMap())
+				runtime.EventsEmit(a.ctx, "t0s", a.data.t0s.copyMap())
+				runtime.EventsEmit(a.ctx, "t1s", a.data.t1s.copyMap())
+				runtime.EventsEmit(a.ctx, "charges", a.data.charges.copyMap())
+				runtime.EventsEmit(a.ctx, "chargesRebin", a.data.chargesRebinned.copyMap())
+				runtime.EventsEmit(a.ctx, "lostBuffer", a.data.lostBuffer.copyMap())
+				runtime.EventsEmit(a.ctx, "lostFPGA", a.data.lostFPGA.copyMap())
 				runtime.EventsEmit(a.ctx, "nEvents", a.data.nEvents)
 			}
 			counter = counter + 1

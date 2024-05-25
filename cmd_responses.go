@@ -20,15 +20,15 @@ type DaqData struct {
 	devices                  map[byte]*net.HardwareAddr
 	slowControlConfiguration map[byte]map[string]any
 	probeConfiguration       map[byte]map[string]any
-	rates                    map[byte]float32
+	rates                    mapWithMyutex[byte, float32]
 	cards                    map[byte]bool
 	events                   []EventData
-	charges                  map[byte]ChargeHistogram
-	chargesRebinned          map[byte]ChargeHistogram
-	t0s                      map[byte][]uint32
-	t1s                      map[byte][]uint32
-	lostBuffer               map[byte]uint32
-	lostFGPA                 map[byte]uint32
+	charges                  mapWithMyutex[byte, ChargeHistogram]
+	chargesRebinned          mapWithMyutex[byte, ChargeHistogram]
+	t0s                      mapWithMyutex[byte, []uint32]
+	t1s                      mapWithMyutex[byte, []uint32]
+	lostBuffer               mapWithMyutex[byte, uint32]
+	lostFPGA                 mapWithMyutex[byte, uint32]
 	nEvents                  int
 }
 
@@ -110,19 +110,19 @@ func storeDeviceMac(frame Frame, data *DaqData, ctx context.Context) {
 	//}
 
 	// Add new charge histogram if this card did not exist
-	if _, exists := data.charges[frame.Source[5]]; !exists {
+	if !data.charges.hasKey(frame.Source[5]) {
 		initialize_charge_histograms(frame.Source[5], data)
 	}
 
-	if _, exists := data.t0s[frame.Source[5]]; !exists {
-		data.t0s[frame.Source[5]] = make([]uint32, 0)
-		data.t1s[frame.Source[5]] = make([]uint32, 0)
+	if !data.t0s.hasKey(frame.Source[5]) {
+		data.t0s.write(frame.Source[5], make([]uint32, 0))
+		data.t1s.write(frame.Source[5], make([]uint32, 0))
 	}
 }
 
 func initialize_charge_histograms(card byte, data *DaqData) {
-	data.charges[card] = *create_charge_histograms(128)
-	data.chargesRebinned[card] = *create_charge_histograms(32)
+	data.charges.write(card, *create_charge_histograms(128))
+	data.chargesRebinned.write(card, *create_charge_histograms(32))
 }
 
 func create_charge_histograms(nbins int) *ChargeHistogram {
@@ -152,16 +152,16 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 		evt.card = frame.Source[5]
 		data.events = append(data.events, *evt)
 
-		nEvts := len(data.t0s[evt.card])
+		nEvts := len(data.t0s.read(evt.card))
 		start := 0
 		if (nEvts - 200) > 0 {
 			start = nEvts - 200
 		}
-		data.t0s[evt.card] = append(data.t0s[evt.card][start:], evt.T0)
-		data.t1s[evt.card] = append(data.t1s[evt.card][start:], evt.T1)
+		data.t0s.write(evt.card, append(data.t0s.read(evt.card)[start:], evt.T0))
+		data.t1s.write(evt.card, append(data.t1s.read(evt.card)[start:], evt.T1))
 
-		data.lostBuffer[evt.card] = data.lostBuffer[evt.card] + uint32(evt.LostBuffer)
-		data.lostFGPA[evt.card] = data.lostFGPA[evt.card] + uint32(evt.LostFPGA)
+		data.lostBuffer.write(evt.card, data.lostBuffer.read(evt.card)+uint32(evt.LostBuffer))
+		data.lostFPGA.write(evt.card, data.lostFPGA.read(evt.card)+uint32(evt.LostFPGA))
 
 		//log.Printf("[Event lost buffer] %d", evt.LostBuffer)
 		//log.Printf("[Event lost fgpa] %d", evt.LostFPGA)
@@ -170,13 +170,13 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 
 		for i := 0; i < 32; i++ {
 			// log.Printf("charge[%d]: %d", i, evt.Charges[i])
-			chargesHistograms := data.charges[frame.Source[5]]
+			chargesHistograms := data.charges.read(frame.Source[5])
 			index := evt.Charges[i] / 32
 			count := chargesHistograms.Charges[i][index]
 			chargesHistograms.Charges[i][index] = count + 1
 
 			// Rebin
-			chargesHistograms = data.chargesRebinned[frame.Source[5]]
+			chargesHistograms = data.chargesRebinned.read(frame.Source[5])
 			index = evt.Charges[i] / 128
 			//fmt.Println(index, evt.Charges[i])
 			count = chargesHistograms.Charges[i][index]
@@ -204,7 +204,7 @@ func writeEvents(data *DaqData, writerData *WriterData) {
 func decodeRate(frame Frame, data *DaqData, ctx context.Context) {
 	bits := binary.LittleEndian.Uint32(frame.Payload[2:6])
 	rate := math.Float32frombits(bits) // in Hz
-	data.rates[frame.Source[5]] = rate
+	data.rates.write(frame.Source[5], rate)
 }
 
 func decodeEvent(data []byte) *EventData {

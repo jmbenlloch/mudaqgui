@@ -43,15 +43,15 @@ func (a *App) startup(ctx context.Context) {
 		devices:                  make(map[byte]*net.HardwareAddr),
 		slowControlConfiguration: make(map[byte]map[string]any),
 		probeConfiguration:       make(map[byte]map[string]any),
-		rates:                    make(map[byte]float32),
+		rates:                    mapWithMyutex[byte, float32]{internalMap: make(map[byte]float32)},
 		cards:                    make(map[byte]bool),
 		events:                   make([]EventData, 0, 10000),
-		charges:                  make(map[byte]ChargeHistogram),
-		chargesRebinned:          make(map[byte]ChargeHistogram),
-		t0s:                      make(map[byte][]uint32),
-		t1s:                      make(map[byte][]uint32),
-		lostBuffer:               make(map[byte]uint32),
-		lostFGPA:                 make(map[byte]uint32),
+		charges:                  mapWithMyutex[byte, ChargeHistogram]{internalMap: make(map[byte]ChargeHistogram)},
+		chargesRebinned:          mapWithMyutex[byte, ChargeHistogram]{internalMap: make(map[byte]ChargeHistogram)},
+		t0s:                      mapWithMyutex[byte, []uint32]{internalMap: make(map[byte][]uint32)},
+		t1s:                      mapWithMyutex[byte, []uint32]{internalMap: make(map[byte][]uint32)},
+		lostBuffer:               mapWithMyutex[byte, uint32]{internalMap: make(map[byte]uint32)},
+		lostFPGA:                 mapWithMyutex[byte, uint32]{internalMap: make(map[byte]uint32)},
 	}
 	a.writerData = WriterData{}
 	a.sendFrameChannel = make(chan *Frame, 2000)
@@ -120,10 +120,10 @@ func (a *App) StartRun() {
 	for _, device := range devices {
 		card := (*device)[5]
 		initialize_charge_histograms(card, &a.data)
-		a.data.t0s[card] = make([]uint32, 0)
-		a.data.t1s[card] = make([]uint32, 0)
-		a.data.lostBuffer[card] = 0
-		a.data.lostFGPA[card] = 0
+		a.data.t0s.write(card, make([]uint32, 0))
+		a.data.t1s.write(card, make([]uint32, 0))
+		a.data.lostBuffer.write(card, 0)
+		a.data.lostFPGA.write(card, 0)
 	}
 
 	createOutputFile(&a.writerData)
