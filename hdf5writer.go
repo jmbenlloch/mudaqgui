@@ -13,6 +13,7 @@ type WriterData struct {
 }
 
 type EventDataHDF5 struct {
+	timestamp  uint64
 	card       byte
 	eventT0    bool
 	eventT1    bool
@@ -126,6 +127,7 @@ func writeData(dataset *hdf5.Dataset, events *[]EventData) {
 	s2 := make([]EventDataHDF5, length)
 	for i := 0; i < int(length); i++ {
 		s2[i] = EventDataHDF5{
+			timestamp:  (*events)[i].timestamp,
 			card:       (*events)[i].card,
 			eventT0:    (*events)[i].eventT0,
 			eventT1:    (*events)[i].eventT1,

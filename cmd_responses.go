@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"net"
+	"time"
 
 	"encoding/binary"
 
@@ -33,6 +34,7 @@ type DaqData struct {
 }
 
 type EventData struct {
+	timestamp  uint64
 	card       byte
 	eventT0    bool
 	eventT1    bool
@@ -142,9 +144,12 @@ func decodeData(frame Frame, data *DaqData, ctx context.Context) {
 	data_start := 2
 	packet_size := 76
 
+	timestamp := uint64(time.Now().UnixMilli())
+
 	for data_start < len(frame.Payload)-2 {
 		//log.Printf("reading: %d - %d Len: %d", data_start, data_start+packet_size, len(frame.Payload))
 		evt := decodeEvent(frame.Payload[data_start : data_start+packet_size])
+		evt.timestamp = timestamp
 		data.nEvents++
 		data_start += packet_size
 

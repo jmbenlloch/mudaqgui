@@ -43,7 +43,10 @@ func readConfigYaml(data *DaqData, file string) {
 	_ = err2
 
 	for card, values := range dataYaml {
-		data.probeConfiguration[card] = values["probeConfiguration"]
-		data.slowControlConfiguration[card] = values["slowControlConfiguration"]
+		// Load only configuration for cards that are connected
+		if _, ok := data.probeConfiguration[card]; ok {
+			data.probeConfiguration[card] = values["probeConfiguration"]
+			data.slowControlConfiguration[card] = values["slowControlConfiguration"]
+		}
 	}
 }
